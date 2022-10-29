@@ -2136,6 +2136,10 @@ section.show-20 header > :first-child:not(a):not(.fnt_t-big) u:before,
 .show-20 .fnt_tc-k:before {
   animation: sparkle-bigger 0.5s linear 0s forwards;
 }
+
+.fnt_tc-k, .lt-bg .fnt_t-1 u, section.lt-bg header > :first-child:not(a):not(.fnt_t-big) u{
+    color: #28285b !important;
+}
 h1 u:after,
 h2 u:after,
 .fnt_t-1 u:after,
@@ -2301,13 +2305,25 @@ h3,
   text-transform: none;
 }
 .btn.v2 {
-  font-family: "Poppins", sans-serif;
-  font-size: 1rem;
-  letter-spacing: 0;
-  line-height: 1;
-  font-weight: 700;
-  text-transform: none;
-}
+    font-family: "Poppins", sans-serif;
+    font-size: 1rem;
+    letter-spacing: 0;
+    line-height: 1;
+    font-weight: 700;
+    text-transform: none;
+  }
+  .btn.v3 {
+    font-family: "Poppins", sans-serif;
+    font-size: 1rem;
+    letter-spacing: 0;
+    line-height: 1;
+    font-weight: 700;
+    text-transform: none;
+  }
+  .btn.v3:hover{
+    color: #ffffff;
+    background-color: #28285b;
+  }
 .txt-btn {
   font-family: "Hepta Slab", sans-serif;
   font-size: 0.889rem;
@@ -2808,8 +2824,11 @@ fieldset li label:not([class*="fnt_"]) {
   background-color: #ffffff;
 }
 .clr-btn {
-  color: #a4d06a;
-}
+    color: #a4d06a;
+  }
+  svg.clr-btn {
+    color: #28285b;
+  }
 .lt-bg .clr-pry,
 .dk-bg .bg-bx.ulk-bg .clr-pry,
 .lt-bg .bg-bx.ulk-bg .bg-bx.lk-bg .clr-pry {
@@ -2818,7 +2837,7 @@ fieldset li label:not([class*="fnt_"]) {
 .lt-bg .clr-sec,
 .dk-bg .bg-bx.ulk-bg .clr-sec,
 .lt-bg .bg-bx.ulk-bg .bg-bx.lk-bg .clr-sec {
-  color: #06a0ff;
+  color: #28285b;
 }
 .lt-bg .clr-acc,
 .dk-bg .bg-bx.ulk-bg .clr-acc {
@@ -3005,7 +3024,7 @@ a.active .bg-bx.btn-clr-hvr:not(.no-hvr)::before {
   background-color: rgba(255, 255, 255, 1);
 }
 .lt-bg [class*="bdr_"] {
-  border-color: rgba(57, 148, 76, 1);
+  border-color: #28285b;
 }
 .dk-bg .bg-bx.ulk-bg [class*="bdr_"] {
   border-color: #28285b;
@@ -3401,7 +3420,7 @@ section.lt-bg .bg-bx.ulk-bg header > *:nth-child(2):not(p) {
 }
 .dk-bg [data-role="arrows"] button,
 .lt-bg .bg-bx.ulk-bg [data-role="arrows"] button {
-  color: #28285b;
+  color: #fff;
 }
 @media screen and (min-width: 1025px) {
   .lt-bg a:hover,
@@ -3601,10 +3620,15 @@ button {
   border-color: #ffb748;
 }
 .btn.v2 {
-  color: #fff;
-  background-color: #06a0ff;
-  border-color: #28285b;
-}
+    color: #fff;
+    background-color: #06a0ff;
+    border-color: #28285b;
+  }
+  .btn.v3 {
+    color: #28285b;
+    background-color: transparent;
+    border-color: #28285b;
+  }
 .txt-btn {
   cursor: pointer;
   display: inline;
@@ -4466,7 +4490,7 @@ hr:after {
   right: 0;
   width: calc(100% - 1.5rem);
   height: 2px;
-  background-color: #a4d06a;
+  background-color: #06a0ff;
   transition: width 1s ease 0.5s;
 }
 [data-role="scroller"] [data-role="arrows"] > button {
@@ -4474,8 +4498,8 @@ hr:after {
   top: 45%;
   width: 2.056rem;
   height: 2.056rem;
-  color: #28285b;
-  background-color: #a4d06a;
+  color: #fff;
+  background-color: #06a0ff;
   border: 2px solid #28285b;
   border-radius: 50%;
   transition: background-color 0.3s ease 0s, border 0.3s ease 0s;
