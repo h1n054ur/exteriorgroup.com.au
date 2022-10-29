@@ -2519,7 +2519,7 @@ fieldset li label:not([class*="fnt_"]) {
 }
 .lt-bg .cnt-stl.bg-bx.lk-bg li::before,
 .dk-bg .cnt-stl.bg-bx.ulk-bg.alt li::before {
-  background-image: url(../svg/site/icon_sparkle.36.39944C.svg);
+  background-image: url(../svg/site/icon_sparkle.36.06a0ff.svg);
 }
 .cnt-stl ul.bllt-lst.v2 {
   padding: 1.4rem 2rem 2rem;
@@ -2546,7 +2546,7 @@ fieldset li label:not([class*="fnt_"]) {
   top: 0;
   height: 100%;
   width: 0.944rem;
-  background-color: #39944c;
+  background-color: #06a0ff;
   border-radius: 0.5rem;
 }
 .dk-bg .txt-hlt.v1:before {
@@ -2560,7 +2560,7 @@ fieldset li label:not([class*="fnt_"]) {
 }
 .lt-bg .txt-hlt.v1 a[href^="tel"],
 .lt-bg .txt-hlt.v2 a[href^="tel"] {
-  color: #39944c !important;
+  color: #06a0ff !important;
 }
 .txt-hlt.v3 {
   color: #ffffff;
@@ -2799,7 +2799,7 @@ fieldset li label:not([class*="fnt_"]) {
   box-shadow: none;
 }
 .lt-bg .so-lk:before {
-  background-color: #39944c;
+  background-color: #06a0ff;
 }
 .lt-bg .so-lk.clr-swp:before {
   background-color: #464646;
@@ -2818,7 +2818,7 @@ fieldset li label:not([class*="fnt_"]) {
 .lt-bg .clr-sec,
 .dk-bg .bg-bx.ulk-bg .clr-sec,
 .lt-bg .bg-bx.ulk-bg .bg-bx.lk-bg .clr-sec {
-  color: #39944c;
+  color: #06a0ff;
 }
 .lt-bg .clr-acc,
 .dk-bg .bg-bx.ulk-bg .clr-acc {
@@ -2826,7 +2826,7 @@ fieldset li label:not([class*="fnt_"]) {
 }
 .lt-bg .clr-lnk,
 .dk-bg .bg-bx.ulk-bg .clr-lnk {
-  color: #39944c;
+  color: #06a0ff;
 }
 .lt-bg .clr-txt,
 .dk-bg .bg-bx.ulk-bg .clr-txt {
@@ -2875,7 +2875,7 @@ fieldset li label:not([class*="fnt_"]) {
 }
 .lt-bg [class*="-secondary"],
 .dk-bg .bg-bx.ulk-bg [class*="-secondary"] {
-  fill: #39944c;
+  fill: #06a0ff;
 }
 .lt-bg [class*="-accent"],
 .dk-bg .bg-bx.ulk-bg [class*="-accent"] {
@@ -2915,7 +2915,7 @@ fieldset li label:not([class*="fnt_"]) {
 }
 .lt-bg a:not(.btn),
 .dk-bg .bg-bx.ulk-bg a:not(.btn) {
-  color: #39944c;
+  color: #06a0ff;
 }
 .lt-bg a.clr-swp,
 .dk-bg .bg-bx.ulk-bg a.clr-swp {
@@ -2925,7 +2925,7 @@ fieldset li label:not([class*="fnt_"]) {
 .dk-bg .bg-bx.ulk-bg a.clr-swp.selected,
 .lt-bg .selected a.clr-swp,
 .dk-bg .bg-bx.ulk-bg .selected a.clr-swp {
-  color: #39944c;
+  color: #06a0ff;
 }
 .lt-bg a[href^="tel"],
 .dk-bg .bg-bx.ulk-bg a[href^="tel"] {
@@ -2938,7 +2938,7 @@ fieldset li label:not([class*="fnt_"]) {
 }
 .lt-bg li.active > a.clr-swp,
 .dk-bg .bg-bx.ulk-bg li.active > a.clr-swp {
-  color: #39944c;
+  color: #06a0ff;
 }
 .lt-bg .btn-clr.active:not(.no-hvr),
 .lt-bg .btn-clr.active:not(.no-hvr),
@@ -2990,7 +2990,7 @@ a.active .bg-bx.btn-clr-hvr:not(.no-hvr)::before {
 }
 .lt-bg .ui-scroll::-webkit-scrollbar-thumb,
 .dk-bg .bg-bx.ulk-bg .ui-scroll::-webkit-scrollbar-thumb {
-  background-color: #39944c;
+  background-color: #06a0ff;
 }
 .lt-bg .ui-scroll::-webkit-scrollbar-track,
 .dk-bg .bg-bx.ulk-bg .ui-scroll::-webkit-scrollbar-track {
@@ -3016,7 +3016,7 @@ a.active .bg-bx.btn-clr-hvr:not(.no-hvr)::before {
 }
 .lt-bg .fnt_tc-big,
 .dk-bg .bg-bx.ulk-bg .fnt_tc-big {
-  color: #39944c;
+  color: #06a0ff;
 }
 .lt-bg .fnt_tc-co,
 .dk-bg .bg-bx.ulk-bg .fnt_tc-co {
@@ -3037,11 +3037,11 @@ section.lt-bg header > :first-child:not(a):not(.fnt_t-big) u,
 .dk-bg .bg-bx.ulk-bg h2 u,
 .dk-bg .bg-bx.ulk-bg .fnt_t-1 u,
 .dk-bg .bg-bx.ulk-bg .fnt_tc-k {
-  color: #39944c;
+  color: #06a0ff;
 }
 .lt-bg .fnt_itm-k,
 .dk-bg .bg-bx.ulk-bg .fnt_itm-k {
-  color: #39944c;
+  color: #06a0ff;
 }
 .lt-bg h1,
 .lt-bg .fnt_tc-1,
@@ -3049,7 +3049,7 @@ section.lt-bg header > :first-child:not(a):not(.fnt_t-big) u,
 .dk-bg .bg-bx.ulk-bg .fnt_tc-1,
 section.lt-bg header > *:first-child:not(a),
 section.dk-bg .bg-bx.ulk-bg header > *:first-child:not(a) {
-  color: #39944c;
+  color: #06a0ff;
 }
 .lt-bg .fnt_tc-2,
 .lt-bg .cnt-stl h2,
@@ -3064,7 +3064,7 @@ section.dk-bg .bg-bx.ulk-bg header > *:nth-child(2):not(p) {
 .lt-bg .cnt-stl h3,
 .dk-bg .bg-bx.ulk-bg .fnt_tc-3,
 .dk-bg .bg-bx.ulk-bg h3 {
-  color: #39944c;
+  color: #06a0ff;
 }
 .lt-bg .cnt-stl h4,
 .lt-bg .fnt_tc-4,
@@ -3218,13 +3218,13 @@ section.lt-bg .bg-bx.ulk-bg header > *:nth-child(2):not(p) {
   background-color: rgba(57, 148, 76, 1);
 }
 .lt-bg .inp-mrk label.replace::before {
-  border: 2px solid #39944c;
+  border: 2px solid #06a0ff;
   border-left: 0;
   border-top: 0;
   background-color: transparent;
 }
 .lt-bg .inp-mrk input:checked + label.replace::before {
-  border: 2px solid #39944c;
+  border: 2px solid #06a0ff;
   border-left: 0;
   border-top: 0;
   background-color: transparent;
@@ -3397,7 +3397,7 @@ section.lt-bg .bg-bx.ulk-bg header > *:nth-child(2):not(p) {
 }
 .lt-bg [data-role="arrows"] button,
 .dk-bg .bg-bx.ulk-bg [data-role="arrows"] button {
-  color: #39944c;
+  color: #06a0ff;
 }
 .dk-bg [data-role="arrows"] button,
 .lt-bg .bg-bx.ulk-bg [data-role="arrows"] button {
@@ -3408,7 +3408,7 @@ section.lt-bg .bg-bx.ulk-bg header > *:nth-child(2):not(p) {
   .lt-bg a:focus,
   .dk-bg .bg-bx.ulk-bg a:hover,
   .dk-bg .bg-bx.ulk-bg a:focus {
-    color: #39944c;
+    color: #06a0ff;
   }
   .lt-bg a.clr-swp:hover,
   .lt-bg a.clr-swp:focus,
@@ -3601,8 +3601,8 @@ button {
   border-color: #ffb748;
 }
 .btn.v2 {
-  color: #28285b;
-  background-color: #a4d06a;
+  color: #fff;
+  background-color: #06a0ff;
   border-color: #28285b;
 }
 .txt-btn {
@@ -6148,7 +6148,7 @@ html.cms-content .hdr .nv-bx > nav,
 }
 .hdr button.clr-txt:hover,
 .hdr button.clr-txt:focus {
-  color: #39944c;
+  color: #06a0ff;
 }
 .hdr .mnu-btn {
   display: none;
@@ -6585,7 +6585,7 @@ html:not(.cms-content) .el-tab-box .el-panel:not(.active) {
   height: 4rem;
   position: relative;
   border-radius: 50%;
-  color: #39944c;
+  color: #06a0ff;
   background-color: #ffffff;
   transition: border-radius 0.3s ease 0s, color 0.3s ease 0s,
     background-color 0.3s ease 0s;
@@ -6716,12 +6716,12 @@ html.x2 .svcs.v3 .ttl .lnk-stl {
     top: 0;
     right: 0;
     color: #ffffff;
-    background-color: #39944c;
+    background-color: #06a0ff;
     padding: 0.1rem 1rem;
   }
   .svcs.v3 .el-tab.active .icn-wrp {
     color: #ffffff;
-    background-color: #39944c;
+    background-color: #06a0ff;
   }
   .svcs.v3 .el-tab.active > .icn-wrp:not(.icn-sec-wrp) {
     box-shadow: none !important;
@@ -7498,7 +7498,7 @@ html.high-contrast .dk-bg.acc-opt.v1 .acc-mnu {
 }
 .ui-dialog-custom.ui-dialog .ui-dialog-titlebar-close .ui-button-icon,
 .ui-dialog-custom.ui-dialog .ui-dialog-titlebar-close .ui-button-icon-space {
-  background: #39944c;
+  background: #06a0ff;
 }
 .ui-widget-overlay {
   background: #000000;
