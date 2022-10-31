@@ -6092,7 +6092,7 @@ html.header-hide:not(.mnu-opn) #HeaderZone {
   transform: translateY(-100%);
 }
 .hdr .tp-lg {
-  max-width: calc((200 * 1px) + (313 - 200) * ((100vw - 320px) / (1920 - 320)));
+  max-width: calc((50 * 1px) + (313 - 200) * ((100vw - 320px) / (1920 - 320)));
 }
 .hdr .dk-lg,
 .hdr .lt-lg {
@@ -6105,6 +6105,10 @@ html.header-hide:not(.mnu-opn) #HeaderZone {
 .hdr .phn-icn {
   font-size: 2rem;
   padding: 0.5rem;
+}
+
+.radius-10 {
+    border-radius: 30px;
 }
 .lcl.hdr.v5 .lc-inf {
   margin-right: 3rem;
