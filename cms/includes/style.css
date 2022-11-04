@@ -3354,6 +3354,10 @@ section.lt-bg .bg-bx.ulk-bg header > *:nth-child(2):not(p) {
 .lt-bg .bg-bx.ulk-bg li.focused .input-text label {
   color: #ffb748;
 }
+
+.lt-bg .bg-bx.ulk-bg .fnt_tc-k{
+  color: #fff !important;
+}
 .dk-bg .invalid .inp-sgt,
 .dk-bg .invalid .input-text,
 .lt-bg .bg-bx.ulk-bg .invalid .inp-sgt,
