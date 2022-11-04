@@ -2140,6 +2140,11 @@ section.show-20 header > :first-child:not(a):not(.fnt_t-big) u:before,
 .fnt_tc-k, .lt-bg .fnt_t-1 u, section.lt-bg header > :first-child:not(a):not(.fnt_t-big) u{
     color: #417cbf !important;
 }
+
+.dk-bg .fnt_tc-k{
+  color: #fff !important;
+}
+
 h1 u:after,
 h2 u:after,
 .fnt_t-1 u:after,
