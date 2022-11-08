@@ -7548,3 +7548,31 @@ html.high-contrast .dk-bg.acc-opt.v1 .acc-mnu {
     opacity: 0.1;
   }
 }
+
+
+
+.dk-bg .btn.v1, .lt-bg .bg-bx.ulk-bg .btn.v1 {
+  border-color: inherit !important;
+}
+
+.srv-prcss.v1 .icn-wrp {
+  background-color: rgb(6 160 255) !important;
+}
+
+.srv-prcss.v1 .icn-wrp > span {
+  color: #fff !important;
+}
+
+.dk-bg .clr-acc, .lt-bg .bg-bx.ulk-bg .clr-acc {
+  color: #ffffff !important;
+}
+
+
+.svc.txt-bnr.v1 .icn-wrp > svg.clr-btn {
+  fill: #fff;
+}
+
+
+.lt-bg .bg-bx.ulk-bg svg.clr-btn {
+  color: #fff !important
+}
