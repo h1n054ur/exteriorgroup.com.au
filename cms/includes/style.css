@@ -7580,3 +7580,7 @@ html.high-contrast .dk-bg.acc-opt.v1 .acc-mnu {
 #SmLocalReviewsV3{
   display: none !important;
 }
+
+.lt-bg .bg-bx.lk-bg svg.clr-btn {
+  color: #417cbf !important;
+}
