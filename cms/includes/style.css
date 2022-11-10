@@ -3346,13 +3346,13 @@ section.lt-bg .bg-bx.ulk-bg header > *:nth-child(2):not(p) {
 .dk-bg li.focused .input-text,
 .lt-bg .bg-bx.ulk-bg li.focused .inp-sgt,
 .lt-bg .bg-bx.ulk-bg li.focused .input-text {
-  border-color: #ffb748;
+  border-color: #417cbf;
 }
 .dk-bg li.focused .inp-sgt label,
 .dk-bg li.focused .input-text label,
 .lt-bg .bg-bx.ulk-bg li.focused .inp-sgt label,
 .lt-bg .bg-bx.ulk-bg li.focused .input-text label {
-  color: #ffb748;
+  color: #417cbf;
 }
 
 .lt-bg .bg-bx.ulk-bg .fnt_tc-k{
@@ -7583,4 +7583,9 @@ html.high-contrast .dk-bg.acc-opt.v1 .acc-mnu {
 
 .lt-bg .bg-bx.lk-bg svg.clr-btn {
   color: #417cbf !important;
+}
+
+
+.bg-wrp picture.img-bg img[src*=".png"]{
+  max-height: none ;
 }
