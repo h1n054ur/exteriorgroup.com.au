@@ -7587,5 +7587,6 @@ html.high-contrast .dk-bg.acc-opt.v1 .acc-mnu {
 
 
 .bg-wrp picture.img-bg img[src*=".png"]{
-  max-height: none ;
+  max-height: none !important;
+  width: 100%;
 }
