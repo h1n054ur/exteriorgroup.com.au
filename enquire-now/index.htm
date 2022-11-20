@@ -420,6 +420,9 @@
 											name="ContactSystemV1$ITM0$Message"></textarea>
 									</div>
 								</li>
+								<li class="full" id="response-form" style="display: none;">
+									<h2 class="mrg_tp-10">Thanks for your enquiry, we'll be in touch shortly!</h2>
+								</li>
 							</ul>
 							<div class="btn-con mrg_tp-30">
 								<ul class="flx-grd f_m">
@@ -559,6 +562,7 @@
 						console.log("success");
 						$("#ContactSystemV1_ITM0_ctl10").removeAttr("disabled");
 						$("#Form_ContactSystemV1")[0].reset();
+						$("#response-form").slideDown();
 					}
 				});
 				
