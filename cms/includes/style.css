@@ -1642,6 +1642,9 @@ input[type="date"] {
 ul{
   /* padding-left: 0 !important; */
 }
+.btn-con .btn.mrg_lt-90{
+  margin-left: 0 !important;
+}
 .file-upload input[type="file"]:before {
   content: "Choose File";
   background-color: #06a0ff;
