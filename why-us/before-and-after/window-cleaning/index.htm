@@ -50,7 +50,9 @@
 (function(){function o(){var r,n,u;for(v(),f=!0,n=0;n<t.length;n++)r=t[n],s(r[0],r[1]);for(t.length=0,n=0;n<i.length;n++)u=i[n],l(u);i.length=0;window.removeEventListener("DOMContentLoaded",o)}function v(){for(var t,i,f,e,h=document.querySelectorAll("script[src],script[data-require]"),o=0;o<h.length;o++){var c=h[o],s=c.getAttribute("src"),n=c.getAttribute("data-require");if(s||n)for(t=n&&n[0]==="["?u(a(n)):[],s&&t.push(s),i=0;i<t.length;i++)f=t[i],e=/(.+?)\.\d{13}(\.\w{2,12})$/.exec(f),e&&(f=e[1]+e[2]),r[f]=1}}function s(i,u){var h,c,s,o;if(!f){t.push([i,u]);return}for(h=[],c=!1,o=0;o<i.length;o++){if(s=i[o],!s||e[s])continue;else r[s]||(h.push(s),r[s]=1);c=!0}for(typeof u=="function"&&(c?n.push([i,u]):u(window.jQuery)),o=0;o<h.length;o++)y(h[o])}function y(n){if(n.indexOf("http://")===0)throw new Error("Cannot load scripts over unsecure channel: "+n);else n.indexOf("/common/")===0||n.indexOf("/cms/")===0?w(n):p(n)}function p(n){var t=document.createElement("script");t.setAttribute("async","async");t.setAttribute("src",n);n.indexOf("callback=registerGmap")===-1?t.addEventListener("load",function(){h(n)}):window.registerGmap=function(){h(n)};t.addEventListener("error",function(){throw new Error("Unable to load script: '"+n+"'");});document.head.appendChild(t)}function w(n,t){var i=document.createElement("script");if(i.setAttribute("data-require",'["'+n+'"]'),n.indexOf("/common/usc/js/")===0)if(typeof Promise=="undefined")throw new Error("This browser doesn't support ES6 modules.  Cannot load: '"+n+"'");else i.setAttribute("type","module");typeof t=="string"?i.text=t:i.src=n;document.head.appendChild(i)}function b(){var n=document.documentElement.getAttribute("data-gmap");return n?"&key="+n:""}function u(n){var i,r,u,f,t;for(Array.isArray(n)||(n=[n]),i={},r=0;r<n.length;r++)if(n[r])for(u=c[n[r]]||n[r],Array.isArray(u)||(u=[u]),f=0;f<u.length;f++)t=u[f],t.indexOf("://")!==-1||t[0]==="/"?i[t]=1:t.indexOf("admin/")===0?i["/common/"+t+".js"]=1:t.indexOf("usc/")===0?i["/common/"+t+".js"]=1:t.indexOf("cms/")===0?i["/"+t+".js"]=1:i["/common/js/"+t+".js"]=1;return Object.keys(i)}function h(n){for(var t,o=u(n),r=0;r<o.length;r++)t=o[r],e[t]=1,f?l(t):i.push(t)}function l(t){for(var u,h,r,f=[],i=0;i<n.length;i++)r=n[i],r[0].indexOf(t)!==-1&&f.push(r);for(i=0;i<f.length;i++){var r=f[i],o=r[0],s=[];for(u=0;u<o.length;u++)e[o[u]]||s.push(o[u]);if((r[0]=s,!s.length)&&(h=r[1],h))try{h(window.jQuery)}catch(c){console.warn(c.stack)}}for(i=n.length-1;i>=0;i--)r=n[i],r[0].length||n.splice(i,1)}var a=function(n,t){return(window.JSON2||JSON).parse(n,t)},f=!1,t=[],i=[],r={},e={},n=[],c;document.readyState==="complete"||document.readyState==="loaded"||document.readyState==="interactive"?o():window.addEventListener("DOMContentLoaded",o);c={jquery:["j/jquery.3.x","j/jquery.ui"],"j/jquery":"j/jquery.3.x",poly:"usc/p/poly",cookie:"j/jquery.cookie",jwplayer:"/common/js/v/jwplayer.js",map:"m/gmap",googlemap:"https://maps.googleapis.com/maps/api/js?v=3&libraries=places&callback=registerGmap"+b()};window.requireLoading=function(n){var t=u(n);return t&&r[t[0]]};window.require=window.require2=window.rrequire=function(n,t){var i=u(n),f,r;for(typeof t!="function"&&typeof arguments[2]=="function"&&(t=arguments[2]),f=!1,r=0;r<i.length;r++)i[r].indexOf("jquery")!==-1&&(f=!0);f?(console.warn("Requiring jQuery should be avoided for performance reasons."),s(i,t)):s(i,t)};window.register=h})();
 </script>
 	<link rel="stylesheet" type="text/css" href="/cms/includes/26kq6xzl55n.2209231510006.css"/>
-	<link rel="stylesheet" type="text/css" href="/cms/includes/style.css"/>
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<link rel="stylesheet" type="text/css" href="/cms/includes/style.css"/>
 </head>
 <body class="window-cleaning-page why-us-branch" data-config="uipadxq2.qaq\3cdak0c3.vu6\jh4t2k1x.7m5">
 	<!-- Google Tag Manager (noscript) -->
@@ -362,6 +364,137 @@
 	</div>
 </section>
 </footer>
+
+	<!-- Bootstrap 5 Modal -->
+	<div class="modal fade" id="contactModal" tabindex="-1" aria-labelledby="contactModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-lg modal-dialog-centered">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="contactModalLabel">Talk to The Exterior Group</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+					<!-- Your Existing Form -->
+					<form id="Form_ContactSystemV1" method="post" enctype="multipart/form-data">
+						<input type="hidden" name="_m_" value="ContactSystemV1">
+						<header class="mrg_bt-30" data-content="true">
+							<strong class="fnt_tc-k mb-4">Have questions or feedback? Send us a message.</strong>
+							<!-- <h1 class="fnt_t-1 fnt-tc-1">Talk to The Exterior Group</h1>
+				<strong class="fnt_t-2 fnt_tc-2 mrg_tp-10">Have questions or feedback? Send us a message.</strong> -->
+						</header>
+						<fieldset>
+							<ul class="flx-grd-sml-blk-800 f_b cls-gp-800 ps-0">
+								<li class="half">
+									<label for="ContactSystemV1_ITM0_FirstName">First Name*</label>
+									<input type="text" id="ContactSystemV1_ITM0_FirstName" required
+										class="form-control">
+								</li>
+								<li class="half">
+									<label for="ContactSystemV1_ITM0_LastName">Last Name*</label>
+									<input type="text" id="ContactSystemV1_ITM0_LastName" required class="form-control">
+								</li>
+								<li class="half">
+									<label for="ContactSystemV1_ITM0_EmailAddress">Email*</label>
+									<input type="email" id="ContactSystemV1_ITM0_EmailAddress" required
+										class="form-control">
+								</li>
+								<li class="half">
+									<label for="ContactSystemV1_ITM0_Phone">Phone*</label>
+									<input type="tel" id="ContactSystemV1_ITM0_Phone" required class="form-control">
+								</li>
+								<li class="half">
+									<label for="ContactSystemV1_ITM0_ZipCode">Address*</label>
+									<input type="text" id="ContactSystemV1_ITM0_ZipCode" required class="form-control">
+								</li>
+								<li class="sel half">
+									<label for="ContactSystemV1_ITM0_HowCanWeHelp">How can we help you?*</label>
+									<select id="ContactSystemV1_ITM0_HowCanWeHelp" required class="form-select">
+										<option value="">Select one</option>
+										<option value="Residential Window Cleaning">Residential Window Cleaning</option>
+										<option value="Residential Gutter Cleaning">Residential Gutter Cleaning</option>
+										<option value="Residential House Washing">Residential House Washing</option>
+										<option value="Residential Pressure Washing">Residential Pressure Washing
+										</option>
+										<option disabled>─────────────────────</option>
+										<option value="Commercial Window Cleaning">Commercial Window Cleaning</option>
+										<option value="Commercial Exterior Building Washing">Commercial Exterior
+											Building Washing</option>
+										<option value="Commercial Pressure Washing">Commercial Pressure Washing</option>
+									</select>
+								</li>
+								<li class="full">
+									<label for="ContactSystemV1_ITM0_Message">Additional Information</label>
+									<textarea id="ContactSystemV1_ITM0_Message" class="form-control"></textarea>
+								</li>
+								<li class="full" id="response-form" style="display: none;">
+									<h4 class="mrg_tp-10">Thanks for your enquiry, we'll be in touch shortly!</h4>
+								</li>
+							</ul>
+							<div class="btn-con mrg_tp-30">
+								<button type="submit" class="btn btn-primary"
+									id="ContactSystemV1_ITM0_ctl10">Submit</button>
+							</div>
+						</fieldset>
+					</form>
+					<!-- End Form -->
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+	
+
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+
+	<script>
+		jQuery(function () {
+			setTimeout(function () {
+				var currentPage = window.location.pathname; // Get the current page URL
+    var modalShownPages = JSON.parse(sessionStorage.getItem("modalShownPages")) || [];
+
+    if (!modalShownPages.includes(currentPage)) {
+        var myModal = new bootstrap.Modal(document.getElementById('contactModal'));
+        myModal.show();
+
+        modalShownPages.push(currentPage); // Add current page to the shown list
+        sessionStorage.setItem("modalShownPages", JSON.stringify(modalShownPages));
+    }
+			}, 3000); // 3 seconds delay
+
+
+			$("#Form_ContactSystemV1").submit(function (e) {
+				e.preventDefault();
+				var SendInfo = {
+					'FirstName': $("#ContactSystemV1_ITM0_FirstName").val(),
+					'LastName': $("#ContactSystemV1_ITM0_LastName").val(),
+					'Email': $("#ContactSystemV1_ITM0_EmailAddress").val(),
+					'Phone': $("#ContactSystemV1_ITM0_Phone").val(),
+					'Address': $("#ContactSystemV1_ITM0_ZipCode").val(),
+					'Service': $("#ContactSystemV1_ITM0_HowCanWeHelp").val(),
+					'Message': $("#ContactSystemV1_ITM0_Message").val()
+				}
+
+				$.ajax({
+					type: 'post',
+					url: 'https://prod-23.australiasoutheast.logic.azure.com:443/workflows/f49890b5e4514e26b939340981da98e9/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=GbZcnQCbBM-qkPLrByvoIcqZp0TRuElnlZ1wlNyWots',
+					data: JSON.stringify(SendInfo),
+					contentType: "application/json; charset=utf-8",
+					traditional: true,
+					success: function (data) {
+						console.log("success");
+						$("#ContactSystemV1_ITM0_ctl10").removeAttr("disabled");
+						$("#Form_ContactSystemV1")[0].reset();
+						$("#response-form").slideDown();
+					}
+				});
+
+			})
+		});
+	</script>
+
 
 
 
