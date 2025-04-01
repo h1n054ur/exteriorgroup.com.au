@@ -2446,7 +2446,6 @@ fieldset li label:not([class*="fnt_"]) {
   h2,
   .fnt_t-2,
   section header > *:nth-child(2):not(p):not(.fnt_t-1),
-  ,
   aside header > *:first-child:not(a) {
     font-size: calc(1.333rem * 1);
   }
