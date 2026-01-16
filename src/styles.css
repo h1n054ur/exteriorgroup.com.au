@@ -208,6 +208,69 @@ section {
   border-color: var(--color-line);
 }
 
+.nav-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 14px 0;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  text-decoration: none;
+  color: var(--color-text);
+  font-weight: 800;
+  font-size: 15px;
+  letter-spacing: -0.01em;
+}
+
+.logo {
+  width: 42px;
+  height: 42px;
+  border-radius: 12px;
+  flex-shrink: 0;
+}
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.nav-links a {
+  padding: 10px 14px;
+  font-weight: 700;
+  font-size: 14px;
+  color: var(--color-muted);
+  text-decoration: none;
+  border-radius: 12px;
+  transition: color 0.18s var(--ease), background 0.18s var(--ease);
+}
+
+.nav-links a:hover {
+  color: var(--color-text);
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.menu-btn {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.05);
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: var(--color-text);
+}
+
+.menu-btn:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
 /* Hero card parallax */
 .hero-card {
   transition: transform 0.1s var(--ease);
