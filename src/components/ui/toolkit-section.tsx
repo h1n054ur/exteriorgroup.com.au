@@ -5,25 +5,25 @@ export const ToolkitSection: FC = () => {
     { 
       title: 'Window Toolkit', 
       description: 'Professional scrubbers and squeegees remove grit and grime without scratching delicate glass.', 
-      image: '/api/assets/toolkit/toolkit-img-residential-window-01.jpg',
+      image: '/api/assets/toolkit/toolkit-img-01.jpg',
       tag: 'PRECISION'
     },
     { 
       title: 'Gutter Vacuum', 
       description: 'High-power industrial vacuum system to remove even the most stubborn debris and sludge.', 
-      image: '/api/assets/toolkit/toolkit-img-residential-gutter-01.jpg',
+      image: '/api/assets/toolkit/toolkit-img-02.jpg',
       tag: 'POWER'
     },
     { 
       title: 'Soft Wash Tools', 
       description: 'Low-pressure delivery systems that apply specialized cleaners to kill moss and algae safely.', 
-      image: '/api/assets/toolkit/toolkit-img-residential-house-01.jpg',
+      image: '/api/assets/toolkit/toolkit-img-03.jpg',
       tag: 'SAFETY'
     },
     { 
       title: 'Pro Washers', 
       description: 'Commercial-grade pressure units with adjustable flow to handle everything from brick to timber.', 
-      image: '/api/assets/toolkit/toolkit-img-residential-pressure-washing-01.jpg',
+      image: '/api/assets/toolkit/toolkit-img-04.jpg',
       tag: 'VERSATILITY'
     },
   ];

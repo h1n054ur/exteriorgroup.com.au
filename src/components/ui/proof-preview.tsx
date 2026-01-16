@@ -22,8 +22,8 @@ export const ProofPreview: FC = () => {
             </div>
             <div class="rounded-2xl overflow-hidden shadow-xl border-4 border-white">
               <BeforeAfterSlider 
-                beforeImage="/api/assets/cms/thumbnails/24/855x530/images/before-after/gutter-cleaning/gutter-cleaning-2-before.jpg"
-                afterImage="/api/assets/cms/thumbnails/24/855x530/images/before-after/gutter-cleaning/gutter-cleaning-2-after.jpg"
+                beforeImage="/api/assets/before-after/gutter-cleaning-2-before.jpg"
+                afterImage="/api/assets/before-after/gutter-cleaning-2-after.jpg"
                 beforeAlt="Dirty clogged gutters"
                 afterAlt="Clean cleared gutters"
               />
@@ -39,8 +39,8 @@ export const ProofPreview: FC = () => {
             </div>
             <div class="rounded-2xl overflow-hidden shadow-xl border-4 border-white">
               <BeforeAfterSlider 
-                beforeImage="/api/assets/cms/thumbnails/24/855x530/images/before-after/house-washing/Before-Housewash.jpg"
-                afterImage="/api/assets/cms/thumbnails/24/855x530/images/before-after/house-washing/After-Housewash.jpg"
+                beforeImage="/api/assets/before-after/Before-Housewash.jpg"
+                afterImage="/api/assets/before-after/After-Housewash.jpg"
                 beforeAlt="Stained house siding"
                 afterAlt="Clean house siding"
               />

@@ -7,7 +7,7 @@ export const ContentSection: FC = () => (
         <div class="relative">
           {/* Main Image */}
           <div class="relative z-10 rounded-3xl overflow-hidden shadow-2xl">
-            <img src="/api/assets/content-v1-img.jpg" alt="Professional cleaning service" class="w-full h-auto" />
+            <img src="/api/assets/content/content-v1-img.jpeg" alt="Professional cleaning service" class="w-full h-auto" />
           </div>
           
           {/* Floating Guarantee Badge */}

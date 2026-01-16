@@ -5,7 +5,7 @@ export const HeroSection: FC = () => (
     {/* Background Image with Overlay */}
     <div class="absolute inset-0 z-0">
       <img 
-        src="/api/assets/corporate-mainstage.png" 
+        src="/api/assets/corporate/corporate-mainstage.png" 
         alt="Exterior Group Hero" 
         class="w-full h-full object-cover"
       />
