@@ -25,6 +25,7 @@ export interface Env {
 // Extend Hono's context to include our bindings
 declare module 'hono' {
   interface ContextVariableMap {
-    // Custom context variables can be added here
+    // User context set by auth middleware
+    user: { sub: string; role: string };
   }
 }

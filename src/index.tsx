@@ -14,7 +14,7 @@ import { marked } from 'marked';
 import type { Env } from './types/bindings';
 import { createR2Response, createNotFoundResponse } from './lib/r2';
 import { createDb } from './lib/db';
-import { projects } from '../db/schema';
+import { projects, leads } from '../db/schema';
 import { Layout } from './components/ui/layout';
 import { performanceHeaders, cacheHtml, cacheFragments, PRELOAD_HINTS } from './lib/cache';
 import { ProofGallery, GalleryItemsFragment } from './components/proof/proof-gallery';
@@ -22,7 +22,22 @@ import { ProjectDetail } from './components/proof/project-detail';
 import { SlideOverContainer } from './components/ui/slide-over';
 import { LeadForm, LeadFormSuccess, ValidationError, ValidationSuccess } from './components/forms/lead-form';
 import { validateEmail, validatePhone, validateLeadForm, verifyTurnstile, type LeadFormData } from './lib/validation';
-import { leads } from '../db/schema';
+import { 
+  requireAuth, 
+  getCurrentUser, 
+  verifyPassword, 
+  hashPassword, 
+  createToken, 
+  setAuthCookie, 
+  clearAuthCookie,
+  isRateLimited,
+  recordFailedAttempt,
+  clearFailedAttempts
+} from './lib/auth';
+import { AdminShell } from './components/admin/admin-shell';
+import { LoginPage } from './components/admin/login-form';
+import { DashboardContent } from './components/admin/dashboard';
+import { sql, count } from 'drizzle-orm';
 
 // Create typed Hono application
 const app = new Hono<{ Bindings: Env }>();
@@ -676,6 +691,123 @@ const FormPlaceholder = () => (
     </p>
   </div>
 );
+
+// =============================================================================
+// ADMIN ROUTES (Epic 5 - Protected by requireAuth middleware)
+// =============================================================================
+
+// Admin login page
+app.get('/admin/login', async (c) => {
+  // If already logged in, redirect to dashboard
+  const user = await getCurrentUser(c);
+  if (user) {
+    return c.redirect('/admin');
+  }
+  
+  return c.html(<LoginPage />);
+});
+
+// Admin login handler
+app.post('/admin/login', async (c) => {
+  const db = createDb(c.env.DB);
+  const clientIp = c.req.header('CF-Connecting-IP') || c.req.header('X-Forwarded-For') || 'unknown';
+  
+  // Check rate limiting
+  const rateLimited = await isRateLimited(db, clientIp);
+  if (rateLimited) {
+    return c.html(<LoginPage locked={true} lockoutMinutes={15} />);
+  }
+  
+  const formData = await c.req.formData();
+  const username = formData.get('username') as string;
+  const password = formData.get('password') as string;
+  
+  // Validate input
+  if (!username || !password) {
+    return c.html(<LoginPage error="Please enter both username and password" />);
+  }
+  
+  // Check credentials
+  // Admin username is 'admin', password hash stored in env
+  if (username !== 'admin') {
+    await recordFailedAttempt(db, clientIp);
+    return c.html(<LoginPage error="Invalid username or password" />);
+  }
+  
+  const passwordHash = c.env.ADMIN_PASSWORD_HASH;
+  if (!passwordHash) {
+    console.error('ADMIN_PASSWORD_HASH not configured');
+    return c.html(<LoginPage error="Authentication not configured. Please contact administrator." />);
+  }
+  
+  const passwordValid = await verifyPassword(password, passwordHash);
+  if (!passwordValid) {
+    await recordFailedAttempt(db, clientIp);
+    return c.html(<LoginPage error="Invalid username or password" />);
+  }
+  
+  // Clear failed attempts on successful login
+  await clearFailedAttempts(db, clientIp);
+  
+  // Create JWT and set cookie
+  const jwtSecret = c.env.JWT_SECRET;
+  if (!jwtSecret) {
+    console.error('JWT_SECRET not configured');
+    return c.html(<LoginPage error="Authentication not configured. Please contact administrator." />);
+  }
+  
+  const token = await createToken({ sub: 'admin', role: 'administrator' }, jwtSecret);
+  setAuthCookie(c, token);
+  
+  return c.redirect('/admin');
+});
+
+// Admin logout
+app.get('/admin/logout', (c) => {
+  clearAuthCookie(c);
+  return c.redirect('/admin/login');
+});
+
+// Admin dashboard (protected)
+app.get('/admin', requireAuth, async (c) => {
+  const db = createDb(c.env.DB);
+  const user = await getCurrentUser(c);
+  
+  // Fetch dashboard stats
+  const [totalLeadsResult] = await db.select({ count: count() }).from(leads);
+  const [newLeadsResult] = await db.select({ count: count() }).from(leads).where(eq(leads.status, 'new'));
+  const [totalProjectsResult] = await db.select({ count: count() }).from(projects);
+  const [publishedProjectsResult] = await db.select({ count: count() }).from(projects).where(eq(projects.published, true));
+  
+  const stats = {
+    totalLeads: totalLeadsResult?.count || 0,
+    newLeads: newLeadsResult?.count || 0,
+    totalProjects: totalProjectsResult?.count || 0,
+    publishedProjects: publishedProjectsResult?.count || 0,
+  };
+  
+  // Fetch recent leads
+  const recentLeads = await db.select()
+    .from(leads)
+    .orderBy(sql`${leads.createdAt} DESC`)
+    .limit(5);
+  
+  // Fetch recent projects
+  const recentProjects = await db.select()
+    .from(projects)
+    .orderBy(sql`${projects.createdAt} DESC`)
+    .limit(5);
+  
+  return c.html(
+    <AdminShell title="Dashboard" currentPath="/admin" user={user || undefined}>
+      <DashboardContent 
+        stats={stats}
+        recentLeads={recentLeads}
+        recentProjects={recentProjects}
+      />
+    </AdminShell>
+  );
+});
 
 // =============================================================================
 // ERROR HANDLING
