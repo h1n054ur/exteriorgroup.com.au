@@ -40,7 +40,9 @@ import { DashboardContent } from './components/admin/dashboard';
 import { LeadsListContent, LeadDetailContent, LeadUpdateSuccess } from './components/admin/leads';
 import { ProjectsListContent, ProjectFormContent, ProjectDeleted } from './components/admin/projects';
 import { MediaContent, UploadSuccess, UploadError, FileDeleted } from './components/admin/media';
-import { sql, count, desc } from 'drizzle-orm';
+import { AnalyticsContent } from './components/admin/analytics';
+import { analyticsSessions, analyticsEvents } from '../db/schema';
+import { sql, count, desc, avg } from 'drizzle-orm';
 
 // Create typed Hono application
 const app = new Hono<{ Bindings: Env }>();
@@ -1245,6 +1247,225 @@ app.delete('/api/admin/media/:key{.+}', requireAuth, async (c) => {
     console.error('Delete error:', error);
     return c.json({ error: 'Failed to delete file' }, 500);
   }
+});
+
+// =============================================================================
+// ADMIN - ANALYTICS DASHBOARD (Epic 7)
+// =============================================================================
+
+app.get('/admin/analytics', requireAuth, async (c) => {
+  const db = createDb(c.env.DB);
+  const user = await getCurrentUser(c);
+  
+  // Get page views count
+  const [pageViewsResult] = await db.select({ count: count() })
+    .from(analyticsEvents)
+    .where(eq(analyticsEvents.eventType, 'page_view'));
+  
+  // Get unique sessions count
+  const [sessionsResult] = await db.select({ count: count() })
+    .from(analyticsSessions);
+  
+  // Get total leads count
+  const [leadsResult] = await db.select({ count: count() })
+    .from(leads);
+  
+  // Calculate conversion rate (leads / sessions * 100)
+  const totalSessions = sessionsResult?.count || 0;
+  const totalLeads = leadsResult?.count || 0;
+  const conversionRate = totalSessions > 0 ? (totalLeads / totalSessions) * 100 : 0;
+  
+  // Get average time on page (from events with timeOnPageSeconds)
+  const avgTimeResult = await db.select({ 
+    avgTime: sql<number>`AVG(${analyticsEvents.timeOnPageSeconds})` 
+  })
+    .from(analyticsEvents)
+    .where(sql`${analyticsEvents.timeOnPageSeconds} IS NOT NULL`);
+  
+  const stats = {
+    totalPageViews: pageViewsResult?.count || 0,
+    uniqueSessions: totalSessions,
+    totalLeads,
+    conversionRate,
+    avgTimeOnPage: Math.round(avgTimeResult[0]?.avgTime || 0),
+  };
+  
+  // Get traffic sources from sessions
+  const trafficSourcesRaw = await db.select({
+    source: analyticsSessions.utmSource,
+    count: count(),
+  })
+    .from(analyticsSessions)
+    .groupBy(analyticsSessions.utmSource)
+    .orderBy(sql`count(*) DESC`)
+    .limit(5);
+  
+  // Get leads count by source
+  const leadsSourcesRaw = await db.select({
+    source: leads.utmSource,
+    count: count(),
+  })
+    .from(leads)
+    .groupBy(leads.utmSource);
+  
+  const leadsSourceMap = new Map(leadsSourcesRaw.map(l => [l.source || 'Direct', l.count]));
+  
+  const trafficSources = trafficSourcesRaw.map(s => ({
+    source: s.source || 'Direct',
+    sessions: s.count,
+    leads: leadsSourceMap.get(s.source || 'Direct') || 0,
+    percentage: totalSessions > 0 ? (s.count / totalSessions) * 100 : 0,
+  }));
+  
+  // Get popular pages
+  const popularPagesRaw = await db.select({
+    pageUrl: analyticsEvents.pageUrl,
+    views: count(),
+    avgTime: sql<number>`AVG(${analyticsEvents.timeOnPageSeconds})`,
+  })
+    .from(analyticsEvents)
+    .where(eq(analyticsEvents.eventType, 'page_view'))
+    .groupBy(analyticsEvents.pageUrl)
+    .orderBy(sql`count(*) DESC`)
+    .limit(5);
+  
+  const popularPages = popularPagesRaw.map(p => ({
+    pageUrl: p.pageUrl,
+    views: p.views,
+    avgTime: Math.round(p.avgTime || 0),
+  }));
+  
+  // Get leads by service
+  const leadsByServiceRaw = await db.select({
+    service: leads.serviceType,
+    count: count(),
+  })
+    .from(leads)
+    .groupBy(leads.serviceType)
+    .orderBy(sql`count(*) DESC`);
+  
+  const leadsByService = leadsByServiceRaw.map(s => ({
+    service: s.service,
+    count: s.count,
+    percentage: totalLeads > 0 ? (s.count / totalLeads) * 100 : 0,
+  }));
+  
+  // Get leads by status
+  const leadsByStatusRaw = await db.select({
+    status: leads.status,
+    count: count(),
+  })
+    .from(leads)
+    .groupBy(leads.status)
+    .orderBy(sql`count(*) DESC`);
+  
+  const leadsByStatus = leadsByStatusRaw.map(s => ({
+    status: s.status,
+    count: s.count,
+    percentage: totalLeads > 0 ? (s.count / totalLeads) * 100 : 0,
+  }));
+  
+  // Get recent events
+  const recentEvents = await db.select({
+    eventType: analyticsEvents.eventType,
+    pageUrl: analyticsEvents.pageUrl,
+    timestamp: analyticsEvents.timestamp,
+  })
+    .from(analyticsEvents)
+    .orderBy(sql`${analyticsEvents.timestamp} DESC`)
+    .limit(10);
+  
+  return c.html(
+    <AdminShell title="Analytics" currentPath="/admin/analytics" user={user || undefined}>
+      <AnalyticsContent 
+        stats={stats}
+        trafficSources={trafficSources}
+        popularPages={popularPages}
+        leadsByService={leadsByService}
+        leadsByStatus={leadsByStatus}
+        recentEvents={recentEvents}
+      />
+    </AdminShell>
+  );
+});
+
+// =============================================================================
+// PUBLIC ANALYTICS TRACKING API
+// =============================================================================
+
+// Track page view
+app.post('/api/analytics/pageview', async (c) => {
+  const db = createDb(c.env.DB);
+  const body = await c.req.json();
+  
+  const sessionId = body.sessionId || crypto.randomUUID();
+  const pageUrl = body.pageUrl || '/';
+  const pageTitle = body.pageTitle;
+  const referrer = body.referrer;
+  const utmSource = body.utmSource;
+  const utmMedium = body.utmMedium;
+  const utmCampaign = body.utmCampaign;
+  
+  // Get client info
+  const userAgent = c.req.header('User-Agent') || '';
+  const cfCountry = c.req.header('CF-IPCountry');
+  
+  // Upsert session
+  const [existingSession] = await db.select()
+    .from(analyticsSessions)
+    .where(eq(analyticsSessions.sessionId, sessionId))
+    .limit(1);
+  
+  if (!existingSession) {
+    await db.insert(analyticsSessions).values({
+      sessionId,
+      userAgent,
+      country: cfCountry || null,
+      referrer: referrer || null,
+      utmSource: utmSource || null,
+      utmMedium: utmMedium || null,
+      utmCampaign: utmCampaign || null,
+      landingPage: pageUrl,
+    });
+  } else {
+    await db.update(analyticsSessions)
+      .set({ lastSeenAt: sql`datetime('now')` })
+      .where(eq(analyticsSessions.sessionId, sessionId));
+  }
+  
+  // Record page view event
+  await db.insert(analyticsEvents).values({
+    sessionId,
+    eventType: 'page_view',
+    pageUrl,
+    pageTitle: pageTitle || null,
+  });
+  
+  return c.json({ success: true, sessionId });
+});
+
+// Track custom event
+app.post('/api/analytics/event', async (c) => {
+  const db = createDb(c.env.DB);
+  const body = await c.req.json();
+  
+  const sessionId = body.sessionId;
+  if (!sessionId) {
+    return c.json({ error: 'Session ID required' }, 400);
+  }
+  
+  await db.insert(analyticsEvents).values({
+    sessionId,
+    eventType: body.eventType || 'custom',
+    eventName: body.eventName || null,
+    pageUrl: body.pageUrl || '/',
+    pageTitle: body.pageTitle || null,
+    eventData: body.eventData ? JSON.stringify(body.eventData) : null,
+    scrollDepth: body.scrollDepth || null,
+    timeOnPageSeconds: body.timeOnPage || null,
+  });
+  
+  return c.json({ success: true });
 });
 
 // =============================================================================
