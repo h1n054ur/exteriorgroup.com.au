@@ -22,11 +22,15 @@
   --color-brand-200: #99c2ff;
   --color-brand-300: #66a3ff;
   --color-brand-400: #3385ff;
-  --color-brand-500: #003366;
-  --color-brand-600: #002d5c;
-  --color-brand-700: #002652;
-  --color-brand-800: #001f47;
-  --color-brand-900: #00193d;
+  --color-brand-500: #0052CC; /* Refined Royal Blue */
+  --color-brand-600: #0047b3;
+  --color-brand-700: #003d99;
+  --color-brand-800: #003380;
+  --color-brand-900: #002966;
+  
+  /* Accent - Sky Blue */
+  --color-accent-50: #e6f6ff;
+  --color-accent-500: #06A0FF; /* Refined Sky Blue */
   
   /* Safety Amber - Action/Accent */
   --color-amber-50: #fffbeb;
@@ -34,11 +38,11 @@
   --color-amber-200: #fde68a;
   --color-amber-300: #fcd34d;
   --color-amber-400: #fbbf24;
-  --color-amber-500: #d69e2e;
-  --color-amber-600: #b7791f;
-  --color-amber-700: #975a16;
-  --color-amber-800: #744210;
-  --color-amber-900: #5f370e;
+  --color-amber-500: #FFB100; /* Refined Safety Amber */
+  --color-amber-600: #e69f00;
+  --color-amber-700: #cc8d00;
+  --color-amber-800: #b37b00;
+  --color-amber-900: #996900;
   
   /* Slate Grey - Secondary */
   --color-slate-50: #f8fafc;

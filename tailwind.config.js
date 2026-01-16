@@ -18,13 +18,18 @@ export default {
           200: '#fde68a',
           300: '#fcd34d',
           400: '#fbbf24',
-          500: '#f59e0b',
+          500: '#FFB100', // Updated to Refined Safety Amber
           600: '#d97706',
           700: '#b45309',
           800: '#92400e',
           900: '#78350f',
         },
         // Exterior Group brand colors
+        brand: {
+          primary: '#0052CC', // Royal Blue
+          accent: '#06A0FF',  // Sky Blue
+          dark: '#003366',
+        },
         exterior: {
           dark: '#1a1a2e',
           primary: '#16213e',

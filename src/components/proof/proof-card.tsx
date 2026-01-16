@@ -1,11 +1,8 @@
 /**
  * ProofCard Component
  * 
- * Displays a single project in the gallery with:
- * - Skeleton loader while image loads
- * - Before/After slider support
- * - Category badge
- * - Click to view details
+ * Modernized project card for the gallery.
+ * Uses design system classes and HTMX.
  */
 
 import type { FC } from 'hono/jsx';
@@ -16,52 +13,6 @@ interface ProofCardProps {
   loading?: boolean;
 }
 
-/**
- * Skeleton loader for ProofCard
- */
-export const ProofCardSkeleton: FC = () => (
-  <div style={{
-    background: 'white',
-    borderRadius: '0.75rem',
-    overflow: 'hidden',
-    boxShadow: '0 1px 3px rgba(0,0,0,0.1)'
-  }}>
-    {/* Image skeleton */}
-    <div style={{
-      aspectRatio: '4/3',
-      background: '#e5e7eb',
-      animation: 'pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite'
-    }} />
-    {/* Content skeleton */}
-    <div style={{ padding: '1rem' }}>
-      <div style={{
-        height: '1.5rem',
-        width: '70%',
-        background: '#e5e7eb',
-        borderRadius: '0.25rem',
-        marginBottom: '0.5rem',
-        animation: 'pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite'
-      }} />
-      <div style={{
-        height: '1rem',
-        width: '50%',
-        background: '#e5e7eb',
-        borderRadius: '0.25rem',
-        animation: 'pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite'
-      }} />
-    </div>
-    <style dangerouslySetInnerHTML={{ __html: `
-      @keyframes pulse {
-        0%, 100% { opacity: 1; }
-        50% { opacity: 0.5; }
-      }
-    `}} />
-  </div>
-);
-
-/**
- * ProofCard - Displays a project in the gallery
- */
 export const ProofCard: FC<ProofCardProps> = ({ project, loading }) => {
   if (loading) {
     return <ProofCardSkeleton />;
@@ -71,149 +22,93 @@ export const ProofCard: FC<ProofCardProps> = ({ project, loading }) => {
     ? `/api/assets/${project.featuredImageKey}`
     : null;
 
-  const categoryColors: Record<string, string> = {
-    roofing: '#ef4444',
-    painting: '#3b82f6',
-    strata: '#10b981',
-  };
-
-  const categoryColor = categoryColors[project.category] || '#6b7280';
-
   return (
     <article 
-      style={{
-        background: 'white',
-        borderRadius: '0.75rem',
-        overflow: 'hidden',
-        boxShadow: '0 1px 3px rgba(0,0,0,0.1)',
-        transition: 'transform 0.2s, box-shadow 0.2s',
-        cursor: 'pointer'
-      }}
-      hx-get={`/api/fragments/project/${project.slug}`}
+      class="proof-card group h-full flex flex-col"
+      hx-get={`/api/fragments/project/${project.id}`}
       hx-target="#slide-over-content"
       hx-trigger="click"
       hx-swap="innerHTML"
     >
       {/* Image container */}
-      <div style={{ position: 'relative', aspectRatio: '4/3', background: '#f3f4f6' }}>
+      <div class="proof-card-image">
         {imageUrl ? (
           <img 
             src={imageUrl}
             alt={project.featuredImageAlt || project.title}
             loading="lazy"
-            style={{
-              width: '100%',
-              height: '100%',
-              objectFit: 'cover'
-            }}
           />
         ) : (
-          <div style={{
-            width: '100%',
-            height: '100%',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            color: '#9ca3af',
-            fontSize: '0.875rem'
-          }}>
-            No image
+          <div class="w-full h-full bg-slate-100 flex items-center justify-center text-slate-400">
+            No image available
           </div>
         )}
         
         {/* Category badge */}
-        <span style={{
-          position: 'absolute',
-          top: '0.75rem',
-          left: '0.75rem',
-          background: categoryColor,
-          color: 'white',
-          padding: '0.25rem 0.75rem',
-          borderRadius: '9999px',
-          fontSize: '0.75rem',
-          fontWeight: 600,
-          textTransform: 'capitalize'
-        }}>
+        <span class="proof-card-tag">
           {project.category}
         </span>
 
         {/* Before/After indicator */}
         {project.beforeImageKey && project.afterImageKey && (
-          <span style={{
-            position: 'absolute',
-            bottom: '0.75rem',
-            right: '0.75rem',
-            background: 'rgba(0,0,0,0.7)',
-            color: 'white',
-            padding: '0.25rem 0.5rem',
-            borderRadius: '0.25rem',
-            fontSize: '0.625rem',
-            fontWeight: 500
-          }}>
-            Before/After
-          </span>
+          <div class="absolute bottom-3 right-3 px-2 py-1 bg-black/70 backdrop-blur-sm text-white text-[10px] font-black uppercase tracking-widest rounded flex items-center gap-1.5">
+            <svg class="w-3 h-3 text-amber-500" fill="currentColor" viewBox="0 0 20 20">
+              <path d="M5 4a1 1 0 00-2 0v12a1 1 0 002 0V4zM11 4a1 1 0 10-2 0v12a1 1 0 102 0V4zM17 4a1 1 0 10-2 0v12a1 1 0 102 0V4z" />
+            </svg>
+            Interactive Proof
+          </div>
         )}
+
+        <div class="proof-card-overlay">
+          <button class="proof-card-overlay-btn shadow-lg">
+            View Case Study
+          </button>
+        </div>
       </div>
 
       {/* Content */}
-      <div style={{ padding: '1rem' }}>
-        <h3 style={{ 
-          fontSize: '1.125rem', 
-          fontWeight: 600,
-          marginBottom: '0.25rem',
-          color: '#111827'
-        }}>
-          {project.title}
-        </h3>
-        
-        {project.location && (
-          <p style={{ 
-            fontSize: '0.875rem', 
-            color: '#6b7280',
-            marginBottom: '0.5rem'
-          }}>
-            📍 {project.location}
-          </p>
-        )}
-        
-        {project.excerpt && (
-          <p style={{
-            fontSize: '0.875rem',
-            color: '#4b5563',
-            lineHeight: 1.5,
-            display: '-webkit-box',
-            WebkitLineClamp: 2,
-            WebkitBoxOrient: 'vertical',
-            overflow: 'hidden'
-          }}>
-            {project.excerpt}
-          </p>
-        )}
+      <div class="proof-card-content flex-1 flex flex-col">
+        <div class="mb-auto">
+          <h3 class="proof-card-title group-hover:text-brand-500 transition-colors">
+            {project.title}
+          </h3>
+          
+          {project.location && (
+            <p class="proof-card-location mb-3">
+              <svg class="w-4 h-4 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+              </svg>
+              {project.location}
+            </p>
+          )}
+        </div>
 
-        <div style={{
-          marginTop: '1rem',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between'
-        }}>
-          <span style={{
-            fontSize: '0.75rem',
-            color: '#9ca3af',
-            textTransform: 'capitalize'
-          }}>
-            {project.sector}
+        <div class="pt-4 border-t border-slate-100 flex items-center justify-between">
+          <span class="text-[10px] font-black uppercase tracking-wider text-slate-400">
+            {project.sector} Sector
           </span>
-          <span style={{
-            color: '#f59e0b',
-            fontWeight: 600,
-            fontSize: '0.875rem'
-          }}>
-            View Proof →
+          <span class="text-brand-500 font-bold text-sm">
+            Details →
           </span>
         </div>
       </div>
     </article>
   );
 };
+
+export const ProofCardSkeleton: FC = () => (
+  <div class="bg-white rounded-2xl overflow-hidden shadow-sm border border-slate-100">
+    <div class="aspect-[4/3] skeleton"></div>
+    <div class="p-6 space-y-3">
+      <div class="h-6 w-3/4 skeleton"></div>
+      <div class="h-4 w-1/2 skeleton"></div>
+      <div class="pt-4 flex justify-between">
+        <div class="h-3 w-1/4 skeleton"></div>
+        <div class="h-3 w-1/4 skeleton"></div>
+      </div>
+    </div>
+  </div>
+);
 
 export default ProofCard;

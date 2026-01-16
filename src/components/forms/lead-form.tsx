@@ -1,11 +1,11 @@
 /**
  * LeadForm Component
  * 
- * Conversational inquiry form with:
+ * Modernized inquiry form with:
  * - Floating labels
  * - Real-time HTMX validation
  * - Turnstile spam protection
- * - Safety Amber CTA styling
+ * - Design system styling
  */
 
 import type { FC } from 'hono/jsx';
@@ -16,214 +16,144 @@ interface LeadFormProps {
   prefilledSector?: string;
 }
 
-/**
- * LeadForm - Main inquiry form component
- */
 export const LeadForm: FC<LeadFormProps> = ({ 
   turnstileSiteKey,
   prefilledService,
   prefilledSector 
 }) => {
   return (
-    <form 
-      id="lead-capture-form"
-      hx-post="/api/leads/submit"
-      hx-target="#form-response"
-      hx-swap="innerHTML"
-      hx-indicator="#form-loading"
-      style={{
-        background: 'white',
-        borderRadius: '1rem',
-        padding: '2rem',
-        boxShadow: '0 4px 6px -1px rgba(0,0,0,0.1)'
-      }}
-    >
-      {/* Name field */}
-      <FormField
-        name="name"
-        label="Your Name"
-        type="text"
-        required
-        autocomplete="name"
-      />
+    <div class="bg-white rounded-3xl p-8 md:p-12 shadow-2xl border border-slate-100 relative overflow-hidden">
+      {/* Decorative accent */}
+      <div class="absolute top-0 left-0 w-2 h-full bg-brand-500"></div>
 
-      {/* Email field */}
-      <FormField
-        name="email"
-        label="Email Address"
-        type="email"
-        required
-        autocomplete="email"
-        validateEndpoint="/api/leads/validate"
-      />
-
-      {/* Phone field */}
-      <FormField
-        name="phone"
-        label="Phone Number"
-        type="tel"
-        autocomplete="tel"
-        placeholder="04XX XXX XXX"
-        validateEndpoint="/api/leads/validate"
-      />
-
-      {/* Company field */}
-      <FormField
-        name="company"
-        label="Company / Property Name"
-        type="text"
-        autocomplete="organization"
-      />
-
-      {/* Service type dropdown */}
-      <div style={{ marginBottom: '1.5rem' }}>
-        <label style={{
-          display: 'block',
-          fontSize: '0.875rem',
-          fontWeight: 500,
-          color: '#374151',
-          marginBottom: '0.5rem'
-        }}>
-          Service Type
-        </label>
-        <select
-          name="serviceType"
-          style={{
-            width: '100%',
-            padding: '0.75rem',
-            borderRadius: '0.5rem',
-            border: '1px solid #d1d5db',
-            fontSize: '1rem',
-            background: 'white'
-          }}
-        >
-          <option value="general" selected={!prefilledService}>General Inquiry</option>
-          <option value="roofing" selected={prefilledService === 'roofing'}>Roofing</option>
-          <option value="painting" selected={prefilledService === 'painting'}>Painting</option>
-          <option value="strata" selected={prefilledService === 'strata'}>Strata Services</option>
-        </select>
-      </div>
-
-      {/* Sector radio buttons */}
-      <div style={{ marginBottom: '1.5rem' }}>
-        <label style={{
-          display: 'block',
-          fontSize: '0.875rem',
-          fontWeight: 500,
-          color: '#374151',
-          marginBottom: '0.5rem'
-        }}>
-          Property Type
-        </label>
-        <div style={{ display: 'flex', gap: '1rem' }}>
-          <label style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: '0.5rem',
-            cursor: 'pointer'
-          }}>
-            <input 
-              type="radio" 
-              name="sector" 
-              value="commercial" 
-              checked={prefilledSector === 'commercial'}
-              style={{ accentColor: '#f59e0b' }}
+      <form 
+        id="lead-capture-form"
+        hx-post="/api/leads/submit"
+        hx-target="#form-response-container"
+        hx-swap="innerHTML"
+        hx-indicator="#form-loading"
+        class="space-y-6"
+      >
+        <div id="form-response-container">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <FormField
+              name="name"
+              label="Your Name"
+              type="text"
+              required
+              autocomplete="name"
+              placeholder=" "
             />
-            Commercial
-          </label>
-          <label style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: '0.5rem',
-            cursor: 'pointer'
-          }}>
-            <input 
-              type="radio" 
-              name="sector" 
-              value="residential" 
-              checked={prefilledSector !== 'commercial'}
-              style={{ accentColor: '#f59e0b' }}
+            <FormField
+              name="email"
+              label="Email Address"
+              type="email"
+              required
+              autocomplete="email"
+              placeholder=" "
+              validateEndpoint="/api/leads/validate"
             />
-            Residential
-          </label>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+            <FormField
+              name="phone"
+              label="Phone Number"
+              type="tel"
+              autocomplete="tel"
+              placeholder=" "
+              validateEndpoint="/api/leads/validate"
+            />
+            <FormField
+              name="company"
+              label="Company / Property"
+              type="text"
+              autocomplete="organization"
+              placeholder=" "
+            />
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+            <div class="form-group">
+              <select
+                name="serviceType"
+                class="form-input form-select"
+              >
+                <option value="general" selected={!prefilledService}>General Inquiry</option>
+                <option value="window" selected={prefilledService === 'window'}>Window Cleaning</option>
+                <option value="gutter" selected={prefilledService === 'gutter'}>Gutter Cleaning</option>
+                <option value="washing" selected={prefilledService === 'washing'}>House/Building Wash</option>
+                <option value="pressure" selected={prefilledService === 'pressure'}>Pressure Washing</option>
+                <option value="roofing" selected={prefilledService === 'roofing'}>Roofing</option>
+                <option value="painting" selected={prefilledService === 'painting'}>Painting</option>
+              </select>
+              <label class="form-label !translate-y-[-2.25rem] !scale-[0.85] !text-brand-500 !bg-white !px-2">Service Type</label>
+            </div>
+
+            <div class="form-group">
+              <select
+                name="sector"
+                class="form-input form-select"
+              >
+                <option value="residential" selected={prefilledSector !== 'commercial'}>Residential</option>
+                <option value="commercial" selected={prefilledSector === 'commercial'}>Commercial / Strata</option>
+              </select>
+              <label class="form-label !translate-y-[-2.25rem] !scale-[0.85] !text-brand-500 !bg-white !px-2">Property Type</label>
+            </div>
+          </div>
+
+          <div class="form-group mt-6">
+            <textarea
+              name="message"
+              rows={4}
+              class="form-input"
+              placeholder=" "
+            ></textarea>
+            <label class="form-label">Tell us about your project</label>
+          </div>
+
+          {/* Turnstile widget */}
+          {turnstileSiteKey && (
+            <div class="mt-6">
+              <div 
+                class="cf-turnstile" 
+                data-sitekey={turnstileSiteKey}
+              />
+              <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+            </div>
+          )}
+
+          <div class="mt-8">
+            <button
+              type="submit"
+              class="btn-primary w-full py-4 text-xl flex items-center justify-center gap-3"
+            >
+              <span>Get Your Free Quote</span>
+              <div id="form-loading" class="htmx-indicator">
+                <svg class="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                  <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                  <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+              </div>
+            </button>
+          </div>
+
+          <div class="mt-6 text-center text-slate-400 text-sm">
+            <p class="flex items-center justify-center gap-2">
+              <svg class="w-4 h-4 text-success" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd" />
+              </svg>
+              Your information is secure and private
+            </p>
+          </div>
         </div>
-      </div>
+      </form>
 
-      {/* Message textarea */}
-      <div style={{ marginBottom: '1.5rem' }}>
-        <label style={{
-          display: 'block',
-          fontSize: '0.875rem',
-          fontWeight: 500,
-          color: '#374151',
-          marginBottom: '0.5rem'
-        }}>
-          Tell us about your project
-        </label>
-        <textarea
-          name="message"
-          rows={4}
-          placeholder="Describe your project, timeline, or any specific requirements..."
-          style={{
-            width: '100%',
-            padding: '0.75rem',
-            borderRadius: '0.5rem',
-            border: '1px solid #d1d5db',
-            fontSize: '1rem',
-            resize: 'vertical',
-            minHeight: '100px'
-          }}
-        />
-      </div>
-
-      {/* UTM hidden fields */}
+      {/* Hidden UTM fields */}
       <input type="hidden" name="utmSource" id="utm_source" />
       <input type="hidden" name="utmMedium" id="utm_medium" />
       <input type="hidden" name="utmCampaign" id="utm_campaign" />
       <input type="hidden" name="landingPage" id="landing_page" />
-
-      {/* Turnstile widget */}
-      {turnstileSiteKey && (
-        <div style={{ marginBottom: '1.5rem' }}>
-          <div 
-            class="cf-turnstile" 
-            data-sitekey={turnstileSiteKey}
-            data-callback="onTurnstileSuccess"
-          />
-          <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
-        </div>
-      )}
-
-      {/* Response container */}
-      <div id="form-response"></div>
-
-      {/* Submit button - Safety Amber */}
-      <button
-        type="submit"
-        style={{
-          width: '100%',
-          padding: '1rem 2rem',
-          background: '#f59e0b',
-          color: 'white',
-          fontSize: '1.125rem',
-          fontWeight: 700,
-          borderRadius: '0.5rem',
-          border: 'none',
-          cursor: 'pointer',
-          transition: 'background 0.2s',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          gap: '0.5rem'
-        }}
-      >
-        <span>Get Your Free Quote</span>
-        <span id="form-loading" class="htmx-indicator" style={{ display: 'none' }}>
-          ⏳
-        </span>
-      </button>
-
-      {/* UTM capture script */}
       <script dangerouslySetInnerHTML={{ __html: `
         (function() {
           const params = new URLSearchParams(window.location.search);
@@ -233,14 +163,11 @@ export const LeadForm: FC<LeadFormProps> = ({
           document.getElementById('landing_page').value = window.location.pathname;
         })();
       `}} />
-    </form>
+    </div>
   );
 };
 
-/**
- * FormField - Reusable input field with floating label and validation
- */
-interface FormFieldProps {
+const FormField: FC<{
   name: string;
   label: string;
   type: string;
@@ -248,40 +175,16 @@ interface FormFieldProps {
   autocomplete?: string;
   placeholder?: string;
   validateEndpoint?: string;
-}
-
-const FormField: FC<FormFieldProps> = ({
-  name,
-  label,
-  type,
-  required,
-  autocomplete,
-  placeholder,
-  validateEndpoint
-}) => {
+}> = ({ name, label, type, required, autocomplete, placeholder, validateEndpoint }) => {
   const htmxAttrs = validateEndpoint ? {
     'hx-post': validateEndpoint,
     'hx-trigger': 'blur',
-    'hx-target': `#${name}-error`,
+    'hx-target': `next .form-error`,
     'hx-swap': 'innerHTML',
-    'hx-include': `[name="${name}"]`
   } : {};
 
   return (
-    <div style={{ marginBottom: '1.5rem' }}>
-      <label 
-        for={name}
-        style={{
-          display: 'block',
-          fontSize: '0.875rem',
-          fontWeight: 500,
-          color: '#374151',
-          marginBottom: '0.5rem'
-        }}
-      >
-        {label}
-        {required && <span style={{ color: '#ef4444' }}> *</span>}
-      </label>
+    <div class="form-group">
       <input
         type={type}
         id={name}
@@ -289,61 +192,15 @@ const FormField: FC<FormFieldProps> = ({
         required={required}
         autocomplete={autocomplete}
         placeholder={placeholder}
+        class="form-input"
         {...htmxAttrs}
-        style={{
-          width: '100%',
-          padding: '0.75rem',
-          borderRadius: '0.5rem',
-          border: '1px solid #d1d5db',
-          fontSize: '1rem',
-          transition: 'border-color 0.2s'
-        }}
       />
-      <div 
-        id={`${name}-error`} 
-        style={{ 
-          minHeight: '1.25rem',
-          marginTop: '0.25rem'
-        }}
-      />
+      <label for={name} class="form-label">
+        {label} {required && '*'}
+      </label>
+      <div class="form-error"></div>
     </div>
   );
 };
-
-/**
- * Success message after form submission
- */
-export const LeadFormSuccess: FC<{ name?: string }> = ({ name }) => (
-  <div style={{
-    background: '#ecfdf5',
-    border: '1px solid #10b981',
-    borderRadius: '0.5rem',
-    padding: '1.5rem',
-    textAlign: 'center',
-    marginBottom: '1rem'
-  }}>
-    <div style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>✅</div>
-    <h3 style={{ color: '#059669', fontSize: '1.25rem', marginBottom: '0.5rem' }}>
-      Thank you{name ? `, ${name}` : ''}!
-    </h3>
-    <p style={{ color: '#047857' }}>
-      We've received your inquiry and will be in touch within 24 hours.
-    </p>
-  </div>
-);
-
-/**
- * Validation error fragment
- */
-export const ValidationError: FC<{ message: string }> = ({ message }) => (
-  <p style={{ color: '#ef4444', fontSize: '0.75rem' }}>
-    {message}
-  </p>
-);
-
-/**
- * Validation success (empty - no error)
- */
-export const ValidationSuccess: FC = () => <span />;
 
 export default LeadForm;

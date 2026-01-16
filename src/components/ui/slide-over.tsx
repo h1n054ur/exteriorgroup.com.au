@@ -1,132 +1,59 @@
 /**
  * SlideOver Component
  * 
- * A slide-in panel for displaying project details.
- * Triggered via HTMX and controlled with vanilla JS.
+ * Modernized slide-in panel for project details.
+ * Uses design system classes and HTMX.
  */
 
 import type { FC, PropsWithChildren } from 'hono/jsx';
 
-interface SlideOverProps extends PropsWithChildren {
-  title?: string;
-}
-
-/**
- * SlideOver Container
- * Renders the shell that holds dynamic content loaded via HTMX
- */
 export const SlideOverContainer: FC = () => (
-  <>
-    {/* Backdrop */}
+  <div id="slide-over" class="slide-over">
     <div 
-      id="slide-over-backdrop"
-      onclick="closeSlideOver()"
-      style={{
-        position: 'fixed',
-        inset: 0,
-        background: 'rgba(0,0,0,0.5)',
-        zIndex: 40,
-        opacity: 0,
-        pointerEvents: 'none',
-        transition: 'opacity 0.3s'
-      }}
-    />
-    
-    {/* Panel */}
-    <div 
-      id="slide-over-panel"
-      style={{
-        position: 'fixed',
-        top: 0,
-        right: 0,
-        bottom: 0,
-        width: '100%',
-        maxWidth: '32rem',
-        background: 'white',
-        boxShadow: '-4px 0 6px -1px rgba(0,0,0,0.1)',
-        zIndex: 50,
-        transform: 'translateX(100%)',
-        transition: 'transform 0.3s ease-out',
-        overflowY: 'auto'
-      }}
-    >
-      {/* Close button */}
+      class="slide-over-backdrop"
+      onclick="document.getElementById('slide-over').classList.remove('open'); setTimeout(() => document.getElementById('slide-over').classList.add('hidden'), 300);"
+    ></div>
+    <div class="slide-over-panel">
       <button
         type="button"
-        onclick="closeSlideOver()"
-        style={{
-          position: 'absolute',
-          top: '1rem',
-          right: '1rem',
-          padding: '0.5rem',
-          background: 'transparent',
-          border: 'none',
-          cursor: 'pointer',
-          borderRadius: '0.375rem',
-          color: '#6b7280',
-          zIndex: 10
-        }}
-        aria-label="Close panel"
+        class="slide-over-close"
+        onclick="document.getElementById('slide-over').classList.remove('open'); setTimeout(() => document.getElementById('slide-over').classList.add('hidden'), 300);"
       >
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path d="M6 18L18 6M6 6l12 12" />
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
         </svg>
       </button>
-      
-      {/* Content container */}
-      <div id="slide-over-content" style={{ padding: '1.5rem' }}>
+      <div id="slide-over-content" class="h-full overflow-y-auto p-8 pt-20">
         {/* Content loaded via HTMX */}
+        <div class="flex items-center justify-center h-full">
+          <div class="text-center">
+            <div class="skeleton w-16 h-16 rounded-full mx-auto mb-6"></div>
+            <div class="skeleton h-4 w-48 mx-auto mb-3"></div>
+            <div class="skeleton h-4 w-32 mx-auto"></div>
+          </div>
+        </div>
       </div>
     </div>
-    
-    {/* Script for slide-over behavior */}
+
     <script dangerouslySetInnerHTML={{ __html: `
-      function openSlideOver() {
-        document.getElementById('slide-over-backdrop').style.opacity = '1';
-        document.getElementById('slide-over-backdrop').style.pointerEvents = 'auto';
-        document.getElementById('slide-over-panel').style.transform = 'translateX(0)';
-        document.body.style.overflow = 'hidden';
-      }
-      
-      function closeSlideOver() {
-        document.getElementById('slide-over-backdrop').style.opacity = '0';
-        document.getElementById('slide-over-backdrop').style.pointerEvents = 'none';
-        document.getElementById('slide-over-panel').style.transform = 'translateX(100%)';
-        document.body.style.overflow = '';
-      }
-      
-      // Open slide-over when content is loaded via HTMX
       document.body.addEventListener('htmx:afterSwap', function(evt) {
         if (evt.detail.target.id === 'slide-over-content') {
-          openSlideOver();
+          const slideOver = document.getElementById('slide-over');
+          slideOver.classList.remove('hidden');
+          setTimeout(() => slideOver.classList.add('open'), 10);
         }
       });
-      
-      // Close on escape key
-      document.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape') closeSlideOver();
-      });
     `}} />
-  </>
+  </div>
 );
 
-/**
- * SlideOver Content Wrapper
- */
-export const SlideOver: FC<SlideOverProps> = ({ children, title }) => (
-  <div>
+export const SlideOver: FC<PropsWithChildren<{ title?: string }>> = ({ children, title }) => (
+  <div class="animate-in fade-in slide-in-from-right duration-300">
     {title && (
-      <h2 style={{
-        fontSize: '1.5rem',
-        fontWeight: 700,
-        marginBottom: '1rem',
-        paddingRight: '2rem'
-      }}>
-        {title}
-      </h2>
+      <h2 class="text-3xl font-heading font-extrabold text-brand-900 mb-6">{title}</h2>
     )}
     {children}
   </div>
 );
 
-export default SlideOver;
+export default SlideOverContainer;
