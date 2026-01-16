@@ -8,22 +8,39 @@
 import { Hono } from 'hono';
 import { logger } from 'hono/logger';
 import { secureHeaders } from 'hono/secure-headers';
+import { compress } from 'hono/compress';
 import type { Env } from './types/bindings';
 import { createR2Response, createNotFoundResponse } from './lib/r2';
 import { Layout } from './components/ui/layout';
+import { performanceHeaders, cacheHtml, cacheFragments, PRELOAD_HINTS } from './lib/cache';
 
 // Create typed Hono application
 const app = new Hono<{ Bindings: Env }>();
 
 // =============================================================================
-// MIDDLEWARE
+// MIDDLEWARE (Performance Optimized - NFR1, NFR2)
 // =============================================================================
+
+// Performance timing headers
+app.use('*', performanceHeaders);
+
+// Compression for text responses
+app.use('*', compress());
 
 // Request logging (dev mode)
 app.use('*', logger());
 
 // Security headers
 app.use('*', secureHeaders());
+
+// Cache HTML responses
+app.use('*', cacheHtml);
+
+// Add preload hints for fonts
+app.use('*', async (c, next) => {
+  await next();
+  c.header('Link', PRELOAD_HINTS);
+});
 
 // =============================================================================
 // PUBLIC ROUTES
