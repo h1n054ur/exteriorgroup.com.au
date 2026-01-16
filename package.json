@@ -14,6 +14,7 @@
     "db:migrate": "wrangler d1 migrations apply exterior-group-db",
     "db:migrate:local": "wrangler d1 migrations apply exterior-group-db --local",
     "db:studio": "drizzle-kit studio",
+    "r2:upload": "wrangler r2 object put exterior-group-assets/logos/logo-teg.png --file archive/images/logos/logo-teg.png && wrangler r2 object put exterior-group-assets/corporate/corporate-mainstage.png --file archive/assets/corporate-mainstage.png",
     "cf-typegen": "wrangler types --env-interface CloudflareBindings"
   },
   "dependencies": {

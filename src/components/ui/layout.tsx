@@ -70,7 +70,7 @@ const Navigation: FC = () => {
       <nav class="container flex items-center justify-between h-16">
         {/* Logo */}
         <a href="/" class="flex items-center gap-3 no-underline">
-          <img src="/images/logos/logo-teg.png" alt="The Exterior Group" class="h-10 w-auto" />
+          <img src="/api/assets/logos/logo-teg.png" alt="The Exterior Group" class="h-10 w-auto" />
           <span class="font-heading text-xl font-extrabold text-white hidden sm:inline">
             The Exterior<span class="text-amber">Group</span>
           </span>
@@ -157,7 +157,7 @@ const Footer: FC = () => {
           {/* Company Info */}
           <div>
             <div class="footer-brand flex items-center gap-2">
-              <img src="/images/logos/logo-teg.png" alt="" class="h-8 w-auto brightness-0 invert" />
+              <img src="/api/assets/logos/logo-teg.png" alt="" class="h-8 w-auto brightness-0 invert" />
               <span>Exterior<span class="footer-brand-accent">Group</span></span>
             </div>
             <p class="footer-description">

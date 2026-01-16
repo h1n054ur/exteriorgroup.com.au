@@ -64,10 +64,10 @@ app.get('/api/health', (c) => {
 
 const ToolkitSection = () => {
   const tools = [
-    { title: 'Window Toolkit', description: 'Professional scrubbers and squeegees remove grit and grime.', image: '/assets/toolkit/toolkit-01.jpeg' },
-    { title: 'Gutter Vacuum', description: 'High-quality wet/dry vacuum to remove even the smallest debris.', image: '/assets/toolkit/toolkit-02.jpeg' },
-    { title: 'Soft Wash Tools', description: 'Adjustable pressure to protect your building’s exterior siding.', image: '/assets/toolkit/toolkit-03.jpg' },
-    { title: 'Pro Washers', description: 'Can be tuned to deliver the right amount of pressure for any surface.', image: '/assets/toolkit/toolkit-04.jpeg' },
+    { title: 'Window Toolkit', description: 'Professional scrubbers and squeegees remove grit and grime.', image: '/api/assets/toolkit/toolkit-01.jpeg' },
+    { title: 'Gutter Vacuum', description: 'High-quality wet/dry vacuum to remove even the smallest debris.', image: '/api/assets/toolkit/toolkit-02.jpeg' },
+    { title: 'Soft Wash Tools', description: 'Adjustable pressure to protect your building’s exterior siding.', image: '/api/assets/toolkit/toolkit-03.jpg' },
+    { title: 'Pro Washers', description: 'Can be tuned to deliver the right amount of pressure for any surface.', image: '/api/assets/toolkit/toolkit-04.jpeg' },
   ];
 
   return (
@@ -103,7 +103,7 @@ const ContentSection = () => (
     <div class="container">
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
         <div class="relative">
-          <img src="/assets/content/main-content.jpeg" alt="Professional cleaning" class="rounded-2xl shadow-xl" />
+          <img src="/api/assets/content/main-content.jpeg" alt="Professional cleaning" class="rounded-2xl shadow-xl" />
           <div class="absolute -bottom-6 -right-6 bg-brand p-6 rounded-2xl shadow-lg hidden md:block">
             <p class="text-white font-bold text-xl">48hr Re-clean</p>
             <p class="text-white/80 text-sm">Satisfaction Guarantee</p>
@@ -321,7 +321,7 @@ app.get('/painting', (c) => c.html(
 // =============================================================================
 
 const HeroSection = () => (
-  <section class="hero" style="background-image: linear-gradient(rgba(0,51,102,0.8), rgba(0,51,102,0.8)), url('/assets/corporate/corporate-mainstage.png'); background-size: cover; background-position: center;">
+  <section class="hero" style="background-image: linear-gradient(rgba(0,51,102,0.8), rgba(0,51,102,0.8)), url('/api/assets/corporate/corporate-mainstage.png'); background-size: cover; background-position: center;">
     <div class="container">
       <div class="hero-content">
         <h1 class="hero-title">
@@ -368,21 +368,21 @@ const ServicePillars = () => {
       description: 'Squeaky clean. Never streaky. Professional scrubbers and squeegees remove grit and grime in no time.', 
       icon: '🪟', 
       href: '/window-cleaning',
-      image: '/assets/services/residential-window-cleaning.png'
+      image: '/api/assets/services/residential-window-cleaning.png'
     },
     { 
       title: 'Gutter Cleaning', 
       description: 'Gutters so clean, you\'ll think they\'re new. We use extreme close-up cameras and powerful vacuums.', 
       icon: '🏠', 
       href: '/gutter-cleaning',
-      image: '/assets/services/residential-gutter-cleaning.png'
+      image: '/api/assets/services/residential-gutter-cleaning.png'
     },
     { 
       title: 'Pressure Washing', 
       description: 'We\'ll give caked on dirt and grime the heave-ho! Professional grade washers tuned for your surface.', 
       icon: '💦', 
       href: '/pressure-washing',
-      image: '/assets/services/residential-pressure-washing.png'
+      image: '/api/assets/services/residential-pressure-washing.png'
     },
   ];
 
@@ -443,8 +443,8 @@ const ProofPreview = () => {
           <div class="space-y-4">
             <h3 class="font-heading text-xl font-bold text-center text-brand">Concrete Cleaning</h3>
             <BeforeAfterSlider 
-              beforeImage="/assets/before-after/pw-before-1.jpg"
-              afterImage="/assets/before-after/pw-after-1.jpg"
+              beforeImage="/api/assets/before-after/pw-before-1.jpg"
+              afterImage="/api/assets/before-after/pw-after-1.jpg"
               beforeAlt="Dirty concrete patio"
               afterAlt="Clean pressure washed concrete"
             />
@@ -452,8 +452,8 @@ const ProofPreview = () => {
           <div class="space-y-4">
             <h3 class="font-heading text-xl font-bold text-center text-brand">House Washing</h3>
             <BeforeAfterSlider 
-              beforeImage="/assets/before-after/hw-before-1.jpg"
-              afterImage="/assets/before-after/hw-after-1.jpg"
+              beforeImage="/api/assets/before-after/hw-before-1.jpg"
+              afterImage="/api/assets/before-after/hw-after-1.jpg"
               beforeAlt="Dirty house exterior"
               afterAlt="Clean washed house exterior"
             />
