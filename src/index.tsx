@@ -37,7 +37,10 @@ import {
 import { AdminShell } from './components/admin/admin-shell';
 import { LoginPage } from './components/admin/login-form';
 import { DashboardContent } from './components/admin/dashboard';
-import { sql, count } from 'drizzle-orm';
+import { LeadsListContent, LeadDetailContent, LeadUpdateSuccess } from './components/admin/leads';
+import { ProjectsListContent, ProjectFormContent, ProjectDeleted } from './components/admin/projects';
+import { MediaContent, UploadSuccess, UploadError, FileDeleted } from './components/admin/media';
+import { sql, count, desc } from 'drizzle-orm';
 
 // Create typed Hono application
 const app = new Hono<{ Bindings: Env }>();
@@ -807,6 +810,441 @@ app.get('/admin', requireAuth, async (c) => {
       />
     </AdminShell>
   );
+});
+
+// =============================================================================
+// ADMIN - LEADS MANAGEMENT (Epic 6, Story 6.1)
+// =============================================================================
+
+// Leads list
+app.get('/admin/leads', requireAuth, async (c) => {
+  const db = createDb(c.env.DB);
+  const user = await getCurrentUser(c);
+  const statusFilter = c.req.query('status');
+  
+  // Get counts for each status
+  const [allCount] = await db.select({ count: count() }).from(leads);
+  const [newCount] = await db.select({ count: count() }).from(leads).where(eq(leads.status, 'new'));
+  const [contactedCount] = await db.select({ count: count() }).from(leads).where(eq(leads.status, 'contacted'));
+  const [quotedCount] = await db.select({ count: count() }).from(leads).where(eq(leads.status, 'quoted'));
+  const [wonCount] = await db.select({ count: count() }).from(leads).where(eq(leads.status, 'won'));
+  const [lostCount] = await db.select({ count: count() }).from(leads).where(eq(leads.status, 'lost'));
+  
+  const counts = {
+    all: allCount?.count || 0,
+    new: newCount?.count || 0,
+    contacted: contactedCount?.count || 0,
+    quoted: quotedCount?.count || 0,
+    won: wonCount?.count || 0,
+    lost: lostCount?.count || 0,
+  };
+  
+  // Get leads with optional status filter
+  let leadsList;
+  if (statusFilter) {
+    leadsList = await db.select()
+      .from(leads)
+      .where(eq(leads.status, statusFilter))
+      .orderBy(sql`${leads.createdAt} DESC`);
+  } else {
+    leadsList = await db.select()
+      .from(leads)
+      .orderBy(sql`${leads.createdAt} DESC`);
+  }
+  
+  return c.html(
+    <AdminShell title="Leads" currentPath="/admin/leads" user={user || undefined}>
+      <LeadsListContent 
+        leads={leadsList}
+        statusFilter={statusFilter}
+        totalCount={counts.all}
+        counts={counts}
+      />
+    </AdminShell>
+  );
+});
+
+// Lead detail
+app.get('/admin/leads/:id', requireAuth, async (c) => {
+  const db = createDb(c.env.DB);
+  const user = await getCurrentUser(c);
+  const id = parseInt(c.req.param('id'));
+  
+  const [lead] = await db.select().from(leads).where(eq(leads.id, id)).limit(1);
+  
+  if (!lead) {
+    return c.redirect('/admin/leads');
+  }
+  
+  return c.html(
+    <AdminShell title={`Lead: ${lead.name}`} currentPath="/admin/leads" user={user || undefined}>
+      <div style={{ marginBottom: '1rem' }}>
+        <a href="/admin/leads" style={{ color: '#9ca3af', textDecoration: 'none', fontSize: '0.875rem' }}>
+          ← Back to Leads
+        </a>
+      </div>
+      <LeadDetailContent lead={lead} />
+    </AdminShell>
+  );
+});
+
+// Lead status update (HTMX)
+app.post('/api/admin/leads/:id/status', requireAuth, async (c) => {
+  const db = createDb(c.env.DB);
+  const id = parseInt(c.req.param('id'));
+  const formData = await c.req.formData();
+  
+  const status = formData.get('status') as string;
+  const internalNotes = formData.get('internalNotes') as string;
+  
+  await db.update(leads)
+    .set({ 
+      status, 
+      internalNotes: internalNotes || null,
+      updatedAt: sql`datetime('now')`
+    })
+    .where(eq(leads.id, id));
+  
+  const [updatedLead] = await db.select().from(leads).where(eq(leads.id, id)).limit(1);
+  
+  return c.html(<LeadUpdateSuccess lead={updatedLead} />);
+});
+
+// =============================================================================
+// ADMIN - PROJECTS MANAGEMENT (Epic 6, Story 6.2)
+// =============================================================================
+
+// Projects list
+app.get('/admin/projects', requireAuth, async (c) => {
+  const db = createDb(c.env.DB);
+  const user = await getCurrentUser(c);
+  
+  const projectsList = await db.select()
+    .from(projects)
+    .orderBy(sql`${projects.createdAt} DESC`);
+  
+  return c.html(
+    <AdminShell title="Projects" currentPath="/admin/projects" user={user || undefined}>
+      <ProjectsListContent projects={projectsList} totalCount={projectsList.length} />
+    </AdminShell>
+  );
+});
+
+// New project form
+app.get('/admin/projects/new', requireAuth, async (c) => {
+  const user = await getCurrentUser(c);
+  
+  return c.html(
+    <AdminShell title="New Project" currentPath="/admin/projects" user={user || undefined}>
+      <div style={{ marginBottom: '1rem' }}>
+        <a href="/admin/projects" style={{ color: '#9ca3af', textDecoration: 'none', fontSize: '0.875rem' }}>
+          ← Back to Projects
+        </a>
+      </div>
+      <ProjectFormContent />
+    </AdminShell>
+  );
+});
+
+// Create project
+app.post('/admin/projects', requireAuth, async (c) => {
+  const db = createDb(c.env.DB);
+  const user = await getCurrentUser(c);
+  const formData = await c.req.formData();
+  
+  const title = formData.get('title') as string;
+  const slug = formData.get('slug') as string;
+  const category = formData.get('category') as string;
+  const sector = formData.get('sector') as string;
+  const clientName = formData.get('clientName') as string;
+  const location = formData.get('location') as string;
+  const completedAt = formData.get('completedAt') as string;
+  const excerpt = formData.get('excerpt') as string;
+  const description = formData.get('description') as string;
+  const metaTitle = formData.get('metaTitle') as string;
+  const metaDescription = formData.get('metaDescription') as string;
+  const featuredImageAlt = formData.get('featuredImageAlt') as string;
+  const published = formData.get('published') === 'true';
+  
+  // Handle file uploads
+  const featuredImage = formData.get('featuredImage') as File | null;
+  const beforeImage = formData.get('beforeImage') as File | null;
+  const afterImage = formData.get('afterImage') as File | null;
+  
+  let featuredImageKey = null;
+  let beforeImageKey = null;
+  let afterImageKey = null;
+  
+  // Upload images to R2 if provided
+  if (featuredImage && featuredImage.size > 0) {
+    const key = `projects/${slug}/featured-${Date.now()}.${featuredImage.name.split('.').pop()}`;
+    await c.env.R2_BUCKET.put(key, featuredImage.stream(), {
+      httpMetadata: { contentType: featuredImage.type }
+    });
+    featuredImageKey = key;
+  }
+  
+  if (beforeImage && beforeImage.size > 0) {
+    const key = `projects/${slug}/before-${Date.now()}.${beforeImage.name.split('.').pop()}`;
+    await c.env.R2_BUCKET.put(key, beforeImage.stream(), {
+      httpMetadata: { contentType: beforeImage.type }
+    });
+    beforeImageKey = key;
+  }
+  
+  if (afterImage && afterImage.size > 0) {
+    const key = `projects/${slug}/after-${Date.now()}.${afterImage.name.split('.').pop()}`;
+    await c.env.R2_BUCKET.put(key, afterImage.stream(), {
+      httpMetadata: { contentType: afterImage.type }
+    });
+    afterImageKey = key;
+  }
+  
+  try {
+    await db.insert(projects).values({
+      title,
+      slug,
+      category,
+      sector,
+      clientName: clientName || null,
+      location: location || null,
+      completedAt: completedAt || null,
+      excerpt: excerpt || null,
+      description,
+      metaTitle: metaTitle || null,
+      metaDescription: metaDescription || null,
+      featuredImageKey,
+      featuredImageAlt: featuredImageAlt || null,
+      beforeImageKey,
+      afterImageKey,
+      published,
+    });
+    
+    return c.redirect('/admin/projects');
+  } catch (error) {
+    console.error('Project creation error:', error);
+    return c.html(
+      <AdminShell title="New Project" currentPath="/admin/projects" user={user || undefined}>
+        <ProjectFormContent error="Failed to create project. The slug may already be in use." />
+      </AdminShell>
+    );
+  }
+});
+
+// Edit project form
+app.get('/admin/projects/:id/edit', requireAuth, async (c) => {
+  const db = createDb(c.env.DB);
+  const user = await getCurrentUser(c);
+  const id = parseInt(c.req.param('id'));
+  
+  const [project] = await db.select().from(projects).where(eq(projects.id, id)).limit(1);
+  
+  if (!project) {
+    return c.redirect('/admin/projects');
+  }
+  
+  return c.html(
+    <AdminShell title={`Edit: ${project.title}`} currentPath="/admin/projects" user={user || undefined}>
+      <div style={{ marginBottom: '1rem' }}>
+        <a href="/admin/projects" style={{ color: '#9ca3af', textDecoration: 'none', fontSize: '0.875rem' }}>
+          ← Back to Projects
+        </a>
+      </div>
+      <ProjectFormContent project={project} isEdit={true} />
+    </AdminShell>
+  );
+});
+
+// Update project
+app.post('/admin/projects/:id', requireAuth, async (c) => {
+  const db = createDb(c.env.DB);
+  const user = await getCurrentUser(c);
+  const id = parseInt(c.req.param('id'));
+  const formData = await c.req.formData();
+  
+  const title = formData.get('title') as string;
+  const slug = formData.get('slug') as string;
+  const category = formData.get('category') as string;
+  const sector = formData.get('sector') as string;
+  const clientName = formData.get('clientName') as string;
+  const location = formData.get('location') as string;
+  const completedAt = formData.get('completedAt') as string;
+  const excerpt = formData.get('excerpt') as string;
+  const description = formData.get('description') as string;
+  const metaTitle = formData.get('metaTitle') as string;
+  const metaDescription = formData.get('metaDescription') as string;
+  const featuredImageAlt = formData.get('featuredImageAlt') as string;
+  const published = formData.get('published') === 'true';
+  
+  // Handle file uploads
+  const featuredImage = formData.get('featuredImage') as File | null;
+  const beforeImage = formData.get('beforeImage') as File | null;
+  const afterImage = formData.get('afterImage') as File | null;
+  const existingFeaturedImage = formData.get('existingFeaturedImage') as string;
+  const existingBeforeImage = formData.get('existingBeforeImage') as string;
+  const existingAfterImage = formData.get('existingAfterImage') as string;
+  
+  let featuredImageKey = existingFeaturedImage || null;
+  let beforeImageKey = existingBeforeImage || null;
+  let afterImageKey = existingAfterImage || null;
+  
+  // Upload new images to R2 if provided
+  if (featuredImage && featuredImage.size > 0) {
+    const key = `projects/${slug}/featured-${Date.now()}.${featuredImage.name.split('.').pop()}`;
+    await c.env.R2_BUCKET.put(key, featuredImage.stream(), {
+      httpMetadata: { contentType: featuredImage.type }
+    });
+    featuredImageKey = key;
+  }
+  
+  if (beforeImage && beforeImage.size > 0) {
+    const key = `projects/${slug}/before-${Date.now()}.${beforeImage.name.split('.').pop()}`;
+    await c.env.R2_BUCKET.put(key, beforeImage.stream(), {
+      httpMetadata: { contentType: beforeImage.type }
+    });
+    beforeImageKey = key;
+  }
+  
+  if (afterImage && afterImage.size > 0) {
+    const key = `projects/${slug}/after-${Date.now()}.${afterImage.name.split('.').pop()}`;
+    await c.env.R2_BUCKET.put(key, afterImage.stream(), {
+      httpMetadata: { contentType: afterImage.type }
+    });
+    afterImageKey = key;
+  }
+  
+  try {
+    await db.update(projects)
+      .set({
+        title,
+        slug,
+        category,
+        sector,
+        clientName: clientName || null,
+        location: location || null,
+        completedAt: completedAt || null,
+        excerpt: excerpt || null,
+        description,
+        metaTitle: metaTitle || null,
+        metaDescription: metaDescription || null,
+        featuredImageKey,
+        featuredImageAlt: featuredImageAlt || null,
+        beforeImageKey,
+        afterImageKey,
+        published,
+        updatedAt: sql`datetime('now')`,
+      })
+      .where(eq(projects.id, id));
+    
+    return c.redirect('/admin/projects');
+  } catch (error) {
+    console.error('Project update error:', error);
+    const [project] = await db.select().from(projects).where(eq(projects.id, id)).limit(1);
+    return c.html(
+      <AdminShell title={`Edit: ${project?.title}`} currentPath="/admin/projects" user={user || undefined}>
+        <ProjectFormContent project={project} isEdit={true} error="Failed to update project." />
+      </AdminShell>
+    );
+  }
+});
+
+// Delete project (HTMX)
+app.delete('/api/admin/projects/:id', requireAuth, async (c) => {
+  const db = createDb(c.env.DB);
+  const id = parseInt(c.req.param('id'));
+  
+  await db.delete(projects).where(eq(projects.id, id));
+  
+  return c.html(<ProjectDeleted />);
+});
+
+// Publish project (HTMX)
+app.post('/api/admin/projects/:id/publish', requireAuth, async (c) => {
+  const db = createDb(c.env.DB);
+  const id = parseInt(c.req.param('id'));
+  
+  await db.update(projects)
+    .set({ published: true, updatedAt: sql`datetime('now')` })
+    .where(eq(projects.id, id));
+  
+  return c.redirect('/admin/projects');
+});
+
+// =============================================================================
+// ADMIN - MEDIA MANAGEMENT (Epic 6, Story 6.3)
+// =============================================================================
+
+// Media library
+app.get('/admin/media', requireAuth, async (c) => {
+  const user = await getCurrentUser(c);
+  const prefix = c.req.query('prefix');
+  
+  // List objects from R2
+  const listResult = await c.env.R2_BUCKET.list({
+    prefix: prefix || undefined,
+    limit: 100,
+  });
+  
+  const items = listResult.objects.map(obj => ({
+    key: obj.key,
+    size: obj.size,
+    uploaded: obj.uploaded.toISOString(),
+    httpMetadata: obj.httpMetadata,
+  }));
+  
+  return c.html(
+    <AdminShell title="Media Library" currentPath="/admin/media" user={user || undefined}>
+      <MediaContent items={items} prefix={prefix} />
+    </AdminShell>
+  );
+});
+
+// Upload files (HTMX)
+app.post('/api/admin/media/upload', requireAuth, async (c) => {
+  const formData = await c.req.formData();
+  const prefix = formData.get('prefix') as string || 'uploads';
+  const files = formData.getAll('files') as unknown as File[];
+  
+  if (!files || files.length === 0) {
+    return c.html(<UploadError message="No files provided" />);
+  }
+  
+  const uploadedFiles: { key: string; url: string }[] = [];
+  
+  for (const file of files) {
+    if (file.size === 0) continue;
+    
+    const key = `${prefix}/${Date.now()}-${file.name}`;
+    
+    try {
+      await c.env.R2_BUCKET.put(key, file.stream(), {
+        httpMetadata: { contentType: file.type }
+      });
+      
+      uploadedFiles.push({
+        key,
+        url: `/api/assets/${key}`
+      });
+    } catch (error) {
+      console.error('Upload error:', error);
+      return c.html(<UploadError message={`Failed to upload ${file.name}`} />);
+    }
+  }
+  
+  return c.html(<UploadSuccess files={uploadedFiles} />);
+});
+
+// Delete file (HTMX)
+app.delete('/api/admin/media/:key{.+}', requireAuth, async (c) => {
+  const key = c.req.param('key');
+  
+  try {
+    await c.env.R2_BUCKET.delete(key);
+    return c.html(<FileDeleted />);
+  } catch (error) {
+    console.error('Delete error:', error);
+    return c.json({ error: 'Failed to delete file' }, 500);
+  }
 });
 
 // =============================================================================
