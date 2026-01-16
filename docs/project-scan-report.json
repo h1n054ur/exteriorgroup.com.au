@@ -1,0 +1,61 @@
+{
+  "workflow_version": "1.2.0",
+  "timestamps": {
+    "started": "2026-01-16T12:00:00Z",
+    "last_updated": "2026-01-16T12:30:00Z",
+    "completed": "2026-01-16T12:30:00Z"
+  },
+  "mode": "initial_scan",
+  "scan_level": "deep",
+  "project_root": "/home/hani/exteriorgroup.com.au",
+  "output_folder": "/home/hani/exteriorgroup.com.au/docs",
+  "completed_steps": [
+    {
+      "step": "step_1",
+      "status": "completed",
+      "timestamp": "2026-01-16T12:05:00Z",
+      "summary": "Classified as monolith with 1 part (web/static)"
+    },
+    {
+      "step": "step_2",
+      "status": "completed",
+      "timestamp": "2026-01-16T12:06:00Z",
+      "summary": "Found 0 existing docs"
+    },
+    {
+      "step": "step_12",
+      "status": "completed",
+      "timestamp": "2026-01-16T12:30:00Z",
+      "summary": "Workflow complete"
+    }
+  ],
+  "current_step": "completed",
+  "findings": {
+    "project_classification": {
+      "repository_type": "monolith",
+      "parts_count": 1,
+      "primary_tech": "Static HTML/JS (Bootstrap 5)"
+    },
+    "technology_stack": {
+      "framework": "None (Legacy Static)",
+      "styling": "Bootstrap 5.3.2",
+      "analytics": "Google Tag Manager",
+      "icons": "Font Awesome"
+    }
+  },
+  "outputs_generated": [
+    "project-scan-report.json",
+    "index.md",
+    "project-overview.md",
+    "architecture.md",
+    "source-tree-analysis.md",
+    "development-guide.md"
+  ],
+  "project_types": [
+    {
+      "part_id": "root",
+      "project_type_id": "web",
+      "display_name": "Exterior Group Web"
+    }
+  ]
+}

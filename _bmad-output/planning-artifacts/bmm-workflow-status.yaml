@@ -1,0 +1,68 @@
+# Workflow Status
+# Generated: 2026-01-16
+project: "exteriorgroup.com.au"
+project_type: "software"
+selected_track: "method"
+field_type: "brownfield"
+workflow_path: "method-brownfield.yaml"
+
+workflow_status:
+  - phase: 0
+    name: "Documentation"
+    workflows:
+      - id: "document-project"
+        status: "docs/index.md"
+        agent: "analyst"
+        command: "/bmad:bmm:workflows:document-project"
+        purpose: "Analyze existing codebase to facilitate modernization"
+  - phase: 1
+    name: "Analysis"
+    workflows:
+      - id: "brainstorm-project"
+        status: "_bmad-output/analysis/brainstorming-session-2026-01-16.md"
+        agent: "analyst"
+        command: "/bmad:bmm:workflows:brainstorming"
+        purpose: "Map features from borderless-tech/logistics to Exterior Group"
+      - id: "research"
+        status: "_bmad-output/planning-artifacts/research/technical-cloudflare-hono-htmx-research-2026-01-16.md"
+        agent: "analyst"
+        command: "/bmad:bmm:workflows:research"
+        purpose: "Technical research for Bun/Hono/HTMX modernization"
+  - phase: 2
+    name: "Planning"
+    workflows:
+      - id: "prd"
+        status: "_bmad-output/planning-artifacts/prd.md"
+        agent: "pm"
+        command: "/bmad:bmm:workflows:create-prd"
+        completion_time: "2026-01-16T00:08:00Z"
+      - id: "create-ux-design"
+        status: "_bmad-output/planning-artifacts/ux-design-specification.md"
+        agent: "ux-designer"
+        command: "/bmad:bmm:workflows:create-ux-design"
+        completion_time: "2026-01-16T00:30:00Z"
+  - phase: 3
+    name: "Solutioning"
+    workflows:
+      - id: "create-architecture"
+        status: "_bmad-output/planning-artifacts/architecture.md"
+        agent: "architect"
+        command: "/bmad:bmm:workflows:create-architecture"
+        completion_time: "2026-01-16T00:40:00Z"
+      - id: "create-epics-and-stories"
+        status: "_bmad-output/planning-artifacts/epics.md"
+        agent: "pm"
+        command: "/bmad:bmm:workflows:create-epics-and-stories"
+        completion_time: "2026-01-16T00:45:00Z"
+      - id: "implementation-readiness"
+        status: "_bmad-output/planning-artifacts/implementation-readiness-report-2026-01-16.md"
+        agent: "pm"
+        command: "/bmad:bmm:workflows:implementation-readiness"
+        completion_time: "2026-01-16T01:00:00Z"
+  - phase: 4
+    name: "Implementation"
+    workflows:
+      - id: "sprint-planning"
+        status: "required"
+        agent: "sm"
+        command: "/bmad:bmm:workflows:sprint-planning"

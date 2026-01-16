@@ -1,0 +1,29 @@
+# Cloudflare Workers Configuration
+# exteriorgroup.com.au - Edge-native Hono application
+
+name = "exterior-group"
+main = "src/index.tsx"
+compatibility_date = "2026-01-16"
+compatibility_flags = ["nodejs_compat"]
+
+# Static assets directory (for Tailwind CSS, etc.)
+[assets]
+directory = "dist"
+run_worker_first = ["/api/*"]
+
+# D1 Database binding (ID will be set after provisioning)
+[[d1_databases]]
+binding = "DB"
+database_name = "exterior-group-db"
+database_id = "9f97c937-ad90-44a5-b24c-02e455fe0301"
+migrations_dir = "db/migrations"
+
+# R2 Storage binding (for project images and media)
+[[r2_buckets]]
+binding = "R2_BUCKET"
+bucket_name = "exterior-group-assets"
+
+# Environment variables (non-secrets)
+# Secrets added via: wrangler secret put SECRET_NAME
+[vars]
+SITE_NAME = "Exterior Group"
