@@ -1,12 +1,12 @@
 import type { FC } from 'hono/jsx';
 
 export const ServiceSwitcher: FC = () => {
-  const residentialServices = [
+const residentialServices = [
     { 
       title: 'Window Cleaning', 
       tag: 'Streak-free finish',
       description: 'Detailed glass + frames + edges for a clean that looks sharp from the street and from inside.', 
-      image: '/api/assets/services/residential-window-cleaning.png',
+      image: '/api/assets/services/residential-window-cleaning.jpg',
       badge: 'Tricky access ok',
       href: '/residential/window-cleaning'
     },
@@ -14,7 +14,7 @@ export const ServiceSwitcher: FC = () => {
       title: 'Gutter Cleaning', 
       tag: 'Clear flow',
       description: 'Remove debris, reduce overflow risk, and leave things tidy. Ideal for seasonal maintenance.', 
-      image: '/api/assets/services/residential-gutter-cleaning.png',
+      image: '/api/assets/services/residential-gutter-cleaning.jpg',
       badge: 'Inspection-friendly',
       href: '/residential/gutter-cleaning'
     },
@@ -22,15 +22,15 @@ export const ServiceSwitcher: FC = () => {
       title: 'Soft House Washing', 
       tag: 'Low pressure',
       description: 'Safely lifts grime and organic build-up without blasting paint or cladding.', 
-      image: '/api/assets/services/residential-house-washing.png',
+      image: '/api/assets/services/residential-house-washing.jpg',
       badge: 'Great for curb appeal',
       href: '/residential/house-washing'
     },
     { 
       title: 'Pressure Washing', 
       tag: 'Dialed-in power',
-      description: 'Driveways, paths, decks and more — the right pressure for the surface, not a one-setting “blast”.', 
-      image: '/api/assets/services/residential-pressure-washing.png',
+      description: 'Driveways, paths, decks and more — the right pressure for the surface, not a one-setting "blast".', 
+      image: '/api/assets/services/residential-pressure-washing.jpg',
       badge: 'Concrete / pavers / timber',
       href: '/residential/pressure-washing'
     }
@@ -41,7 +41,7 @@ export const ServiceSwitcher: FC = () => {
       title: 'Commercial Windows', 
       tag: 'Professional finish',
       description: 'Clean glass, clean lines, stronger first impressions — for storefronts, offices, and sites.', 
-      image: '/api/assets/services/commercial-window-cleaning.png',
+      image: '/api/assets/services/commercial-window-cleaning.jpg',
       badge: 'After-hours options',
       href: '/commercial/window-cleaning'
     },
@@ -49,7 +49,7 @@ export const ServiceSwitcher: FC = () => {
       title: 'Exterior Building Washing', 
       tag: 'Low-risk methods',
       description: 'Lift build-up across facades and cladding while protecting finishes and signage.', 
-      image: '/api/assets/services/commercial-exterior-washing.png',
+      image: '/api/assets/services/commercial-exterior-washing.jpg',
       badge: 'Maintenance plans',
       href: '/commercial/exterior-washing'
     },
@@ -57,7 +57,7 @@ export const ServiceSwitcher: FC = () => {
       title: 'Commercial Pressure Washing', 
       tag: 'Footpaths & loading',
       description: 'Keep public areas, entries, and high-traffic zones safe, clean, and presentable.', 
-      image: '/api/assets/services/commercial-pressure-washing.png',
+      image: '/api/assets/services/commercial-pressure-washing.jpg',
       badge: 'Surface-appropriate',
       href: '/commercial/pressure-washing'
     },
@@ -65,7 +65,7 @@ export const ServiceSwitcher: FC = () => {
       title: 'Site Washdowns', 
       tag: 'Fast turnaround',
       description: 'Pre-inspection cleans, turnover washes, and scheduled site care without the drama.', 
-      image: '/api/assets/services/commercial-img.jpg',
+      image: '/api/assets/services/commercial-pressure-washing.jpg',
       badge: 'Quote in minutes',
       href: '/commercial/site-washdowns'
     }

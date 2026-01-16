@@ -364,3 +364,92 @@ input:focus, select:focus, textarea:focus {
   opacity: 1;
   transform: translateX(-50%) translateY(0);
 }
+
+/* =============================================================================
+   BEFORE/AFTER SLIDER
+   ============================================================================= */
+.before-after {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  min-height: 400px;
+  overflow: hidden;
+  cursor: col-resize;
+  user-select: none;
+  border-radius: var(--radius2);
+}
+
+.before-after-image {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  pointer-events: none;
+}
+
+.before-after-before {
+  z-index: 2;
+}
+
+.before-after-slider {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: rgba(255, 255, 255, 0.8);
+  box-shadow: 0 0 0 8px rgba(124, 58, 237, 0.25);
+  z-index: 10;
+  transform: translateX(-50%);
+}
+
+.before-after-handle {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 54px;
+  height: 54px;
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  background: rgba(11, 18, 32, 0.75);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  cursor: col-resize;
+  transition: transform 0.15s var(--ease), background 0.15s var(--ease);
+}
+
+.before-after-handle:hover {
+  transform: translate(-50%, -50%) scale(1.08);
+  background: rgba(124, 58, 237, 0.65);
+}
+
+.before-after-label {
+  position: absolute;
+  bottom: 16px;
+  padding: 8px 14px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  background: rgba(11, 18, 32, 0.72);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  font-size: 12px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: rgba(255, 255, 255, 0.9);
+  z-index: 15;
+  pointer-events: none;
+}
+
+.before-after-label-before {
+  left: 16px;
+}
+
+.before-after-label-after {
+  right: 16px;
+}

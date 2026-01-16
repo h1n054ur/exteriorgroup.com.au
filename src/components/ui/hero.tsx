@@ -53,7 +53,7 @@ export const HeroSection: FC = () => (
       <div class="hero-card relative rounded-[26px] border border-white/15 bg-gradient-to-b from-white/10 to-white/5 overflow-hidden shadow-2xl min-h-[420px] reveal" data-parallax>
         {/* Background Image from R2 */}
         <div class="absolute inset-0 bg-gradient-to-b from-black/10 to-black/60 z-0">
-          <img src="/api/assets/corporate/corporate-mainstage.png" alt="" class="w-full h-full object-cover scale-105" />
+          <img src="/api/assets/corporate/hero-main.png" alt="" class="w-full h-full object-cover scale-105" />
         </div>
         <div class="absolute inset-0 bg-radial-gradient(800px 500px at 40% 20%, transparent, rgba(0,0,0,0.35) 55%, rgba(0,0,0,0.62)) z-10"></div>
 
