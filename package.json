@@ -4,6 +4,7 @@
   "scripts": {
     "dev": "wrangler dev",
     "deploy": "wrangler deploy --minify",
+    "deploy:staging": "wrangler deploy --minify --env staging",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "test:watch": "vitest",

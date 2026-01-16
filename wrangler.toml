@@ -27,3 +27,21 @@ bucket_name = "exterior-group-assets"
 # Secrets added via: wrangler secret put SECRET_NAME
 [vars]
 SITE_NAME = "Exterior Group"
+
+# =============================================================================
+# STAGING ENVIRONMENT (for preview deployments)
+# =============================================================================
+[env.staging]
+name = "exterior-group-staging"
+vars = { SITE_NAME = "Exterior Group (Staging)" }
+
+# Use same D1 database for staging (or create a separate one)
+[[env.staging.d1_databases]]
+binding = "DB"
+database_name = "exterior-group-db"
+database_id = "9f97c937-ad90-44a5-b24c-02e455fe0301"
+
+# Use same R2 bucket for staging
+[[env.staging.r2_buckets]]
+binding = "R2_BUCKET"
+bucket_name = "exterior-group-assets"
