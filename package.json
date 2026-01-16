@@ -3,8 +3,9 @@
   "type": "module",
   "scripts": {
     "dev": "wrangler dev",
-    "deploy": "wrangler deploy --minify",
-    "deploy:staging": "wrangler deploy --minify --env staging",
+    "build": "mkdir -p dist",
+    "deploy": "bun run build && wrangler deploy --minify --env=\"\"",
+    "deploy:staging": "bun run build && wrangler deploy --minify --env staging",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "test:watch": "vitest",
