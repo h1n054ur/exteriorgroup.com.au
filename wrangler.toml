@@ -1,7 +1,7 @@
 # Cloudflare Workers Configuration
 # exteriorgroup.com.au - Edge-native Hono application
 
-name = "exterior-group"
+name = "exteriorgroup"
 main = "src/index.tsx"
 compatibility_date = "2026-01-16"
 compatibility_flags = ["nodejs_compat"]
@@ -32,7 +32,7 @@ SITE_NAME = "Exterior Group"
 # STAGING ENVIRONMENT (for preview deployments)
 # =============================================================================
 [env.staging]
-name = "exterior-group-staging"
+name = "exteriorgroup-staging"
 vars = { SITE_NAME = "Exterior Group (Staging)" }
 
 # Use same D1 database for staging (or create a separate one)
