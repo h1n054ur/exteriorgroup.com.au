@@ -5,7 +5,7 @@
  * - Montserrat headings + Inter UI typography
  * - Responsive navigation
  * - HTMX integration
- * - Tailwind CSS
+ * - Tailwind CSS (external stylesheet)
  */
 
 import type { FC, PropsWithChildren } from 'hono/jsx';
@@ -28,104 +28,15 @@ export const Layout: FC<LayoutProps> = ({
         <meta name="description" content={description} />
         <title>{title}</title>
         
-        {/* Google Fonts - Montserrat (headings) + Inter (UI) */}
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous" />
-        <link 
-          href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Montserrat:wght@600;700;800&display=swap" 
-          rel="stylesheet" 
-        />
+        {/* Tailwind CSS (built from src/styles.css) */}
+        <link rel="stylesheet" href="/styles.css" />
         
         {/* HTMX v2 */}
         <script src="https://unpkg.com/htmx.org@2.0.4" defer></script>
-        
-        {/* Inline critical styles for TTFB optimization */}
-        <style dangerouslySetInnerHTML={{ __html: `
-          :root {
-            --font-sans: 'Inter', system-ui, sans-serif;
-            --font-heading: 'Montserrat', system-ui, sans-serif;
-            --color-amber-500: #f59e0b;
-            --color-amber-600: #d97706;
-            --color-exterior-dark: #1a1a2e;
-            --color-exterior-primary: #16213e;
-          }
-          
-          * { margin: 0; padding: 0; box-sizing: border-box; }
-          
-          html { scroll-behavior: smooth; }
-          
-          body {
-            font-family: var(--font-sans);
-            color: #111827;
-            background: #fff;
-            -webkit-font-smoothing: antialiased;
-            line-height: 1.5;
-          }
-          
-          h1, h2, h3, h4, h5, h6 {
-            font-family: var(--font-heading);
-            font-weight: 700;
-          }
-          
-          /* Navigation styles */
-          .nav-link {
-            color: #374151;
-            font-weight: 500;
-            padding: 0.5rem 1rem;
-            border-radius: 0.375rem;
-            transition: all 0.2s;
-          }
-          
-          .nav-link:hover {
-            color: var(--color-amber-600);
-            background: #fef3c7;
-          }
-          
-          /* Mobile menu */
-          .mobile-menu { display: none; }
-          .mobile-menu.open { display: block; }
-          
-          /* Button styles */
-          .btn-primary {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            padding: 0.75rem 1.5rem;
-            background: var(--color-amber-500);
-            color: white;
-            font-weight: 600;
-            border-radius: 0.5rem;
-            transition: background 0.2s;
-            text-decoration: none;
-          }
-          
-          .btn-primary:hover {
-            background: var(--color-amber-600);
-          }
-          
-          /* Container */
-          .container {
-            max-width: 80rem;
-            margin: 0 auto;
-            padding: 0 1rem;
-          }
-          
-          @media (min-width: 640px) {
-            .container { padding: 0 1.5rem; }
-          }
-          
-          @media (min-width: 1024px) {
-            .container { padding: 0 2rem; }
-          }
-          
-          /* HTMX loading indicator */
-          .htmx-request .htmx-indicator { opacity: 1; }
-          .htmx-indicator { opacity: 0; transition: opacity 0.2s; }
-        `}} />
       </head>
-      <body>
+      <body class="min-h-screen flex flex-col">
         <Navigation />
-        <main id="main-content">
+        <main id="main-content" class="flex-1">
           {children}
         </main>
         <Footer />
@@ -147,36 +58,24 @@ const Navigation: FC = () => {
   ];
 
   return (
-    <header style={{ 
-      position: 'sticky', 
-      top: 0, 
-      zIndex: 50, 
-      background: 'white',
-      borderBottom: '1px solid #e5e7eb'
-    }}>
-      <nav class="container" style={{ 
-        display: 'flex', 
-        alignItems: 'center', 
-        justifyContent: 'space-between',
-        height: '4rem'
-      }}>
+    <header class="sticky top-0 z-50 bg-white border-b border-gray-200">
+      <nav class="container flex items-center justify-between h-16">
         {/* Logo */}
-        <a href="/" style={{ 
-          fontFamily: 'var(--font-heading)', 
-          fontSize: '1.5rem', 
-          fontWeight: 800,
-          color: 'var(--color-exterior-dark)',
-          textDecoration: 'none'
-        }}>
-          Exterior<span style={{ color: 'var(--color-amber-500)' }}>Group</span>
+        <a href="/" class="font-heading text-2xl font-extrabold text-exterior-dark no-underline">
+          Exterior<span class="text-amber-500">Group</span>
         </a>
         
         {/* Desktop Navigation */}
-        <div style={{ display: 'none' }} class="desktop-nav">
+        <div class="hidden md:flex items-center gap-2">
           {navLinks.map(link => (
-            <a href={link.href} class="nav-link">{link.label}</a>
+            <a 
+              href={link.href} 
+              class="px-4 py-2 text-gray-700 font-medium rounded-md hover:text-amber-600 hover:bg-amber-50 transition-colors"
+            >
+              {link.label}
+            </a>
           ))}
-          <a href="/enquire" class="btn-primary" style={{ marginLeft: '1rem' }}>
+          <a href="/enquire" class="btn-primary ml-4">
             Get a Quote
           </a>
         </div>
@@ -184,75 +83,42 @@ const Navigation: FC = () => {
         {/* Mobile Menu Button */}
         <button 
           type="button"
-          class="mobile-menu-btn"
+          id="mobile-menu-btn"
+          class="md:hidden p-2 text-gray-700"
           aria-label="Toggle menu"
-          onclick="document.getElementById('mobile-menu').classList.toggle('open')"
-          style={{
-            display: 'block',
-            padding: '0.5rem',
-            background: 'transparent',
-            border: 'none',
-            cursor: 'pointer'
-          }}
+          aria-expanded="false"
         >
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M3 12h18M3 6h18M3 18h18" />
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
           </svg>
         </button>
       </nav>
       
       {/* Mobile Menu */}
-      <div id="mobile-menu" class="mobile-menu" style={{
-        padding: '1rem',
-        borderTop: '1px solid #e5e7eb',
-        background: 'white'
-      }}>
-        {navLinks.map(link => (
-          <a 
-            href={link.href} 
-            style={{
-              display: 'block',
-              padding: '0.75rem 0',
-              color: '#374151',
-              fontWeight: 500,
-              textDecoration: 'none',
-              borderBottom: '1px solid #f3f4f6'
-            }}
-          >
-            {link.label}
+      <div id="mobile-menu" class="hidden md:hidden border-t border-gray-200 bg-white">
+        <div class="container py-4 space-y-1">
+          {navLinks.map(link => (
+            <a 
+              href={link.href} 
+              class="block py-3 px-4 text-gray-700 font-medium rounded-md hover:bg-gray-50"
+            >
+              {link.label}
+            </a>
+          ))}
+          <a href="/enquire" class="btn-primary w-full text-center mt-4">
+            Get a Quote
           </a>
-        ))}
-        <a href="/enquire" class="btn-primary" style={{ 
-          display: 'block', 
-          textAlign: 'center',
-          marginTop: '1rem' 
-        }}>
-          Get a Quote
-        </a>
+        </div>
       </div>
       
-      {/* Script for responsive behavior */}
+      {/* Mobile menu toggle script */}
       <script dangerouslySetInnerHTML={{ __html: `
-        (function() {
-          const mq = window.matchMedia('(min-width: 768px)');
-          const desktopNav = document.querySelector('.desktop-nav');
-          const mobileBtn = document.querySelector('.mobile-menu-btn');
-          
-          function handleResize(e) {
-            if (e.matches) {
-              desktopNav.style.display = 'flex';
-              desktopNav.style.alignItems = 'center';
-              desktopNav.style.gap = '0.5rem';
-              mobileBtn.style.display = 'none';
-            } else {
-              desktopNav.style.display = 'none';
-              mobileBtn.style.display = 'block';
-            }
-          }
-          
-          mq.addEventListener('change', handleResize);
-          handleResize(mq);
-        })();
+        document.getElementById('mobile-menu-btn').addEventListener('click', function() {
+          var menu = document.getElementById('mobile-menu');
+          var expanded = this.getAttribute('aria-expanded') === 'true';
+          this.setAttribute('aria-expanded', !expanded);
+          menu.classList.toggle('hidden');
+        });
       `}} />
     </header>
   );
@@ -262,62 +128,59 @@ const Navigation: FC = () => {
  * Footer Component
  */
 const Footer: FC = () => {
+  const currentYear = new Date().getFullYear();
+  
   return (
-    <footer style={{
-      background: 'var(--color-exterior-dark)',
-      color: 'white',
-      padding: '3rem 0'
-    }}>
+    <footer class="bg-exterior-dark text-white py-12">
       <div class="container">
-        <div style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
-          gap: '2rem'
-        }}>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
           {/* Company Info */}
           <div>
-            <h3 style={{ 
-              fontFamily: 'var(--font-heading)', 
-              fontSize: '1.25rem',
-              marginBottom: '1rem'
-            }}>
-              Exterior<span style={{ color: 'var(--color-amber-500)' }}>Group</span>
+            <h3 class="font-heading text-xl font-bold mb-4">
+              Exterior<span class="text-amber-500">Group</span>
             </h3>
-            <p style={{ color: '#9ca3af', fontSize: '0.875rem', lineHeight: 1.6 }}>
+            <p class="text-gray-400 text-sm leading-relaxed">
               Professional exterior services for commercial and residential properties across Australia.
             </p>
           </div>
           
           {/* Services */}
           <div>
-            <h4 style={{ fontWeight: 600, marginBottom: '1rem' }}>Services</h4>
-            <ul style={{ listStyle: 'none', color: '#9ca3af', fontSize: '0.875rem' }}>
-              <li style={{ marginBottom: '0.5rem' }}><a href="/roofing" style={{ color: 'inherit', textDecoration: 'none' }}>Roofing</a></li>
-              <li style={{ marginBottom: '0.5rem' }}><a href="/painting" style={{ color: 'inherit', textDecoration: 'none' }}>Painting</a></li>
-              <li style={{ marginBottom: '0.5rem' }}><a href="/commercial" style={{ color: 'inherit', textDecoration: 'none' }}>Commercial</a></li>
-              <li style={{ marginBottom: '0.5rem' }}><a href="/residential" style={{ color: 'inherit', textDecoration: 'none' }}>Residential</a></li>
+            <h4 class="font-semibold mb-4">Services</h4>
+            <ul class="space-y-2 text-gray-400 text-sm">
+              <li><a href="/roofing" class="hover:text-white transition-colors">Roofing</a></li>
+              <li><a href="/painting" class="hover:text-white transition-colors">Painting</a></li>
+              <li><a href="/commercial" class="hover:text-white transition-colors">Commercial</a></li>
+              <li><a href="/residential" class="hover:text-white transition-colors">Residential</a></li>
+            </ul>
+          </div>
+          
+          {/* Company */}
+          <div>
+            <h4 class="font-semibold mb-4">Company</h4>
+            <ul class="space-y-2 text-gray-400 text-sm">
+              <li><a href="/gallery" class="hover:text-white transition-colors">Our Work</a></li>
+              <li><a href="/about" class="hover:text-white transition-colors">About Us</a></li>
+              <li><a href="/enquire" class="hover:text-white transition-colors">Contact</a></li>
             </ul>
           </div>
           
           {/* Contact */}
           <div>
-            <h4 style={{ fontWeight: 600, marginBottom: '1rem' }}>Contact</h4>
-            <ul style={{ listStyle: 'none', color: '#9ca3af', fontSize: '0.875rem' }}>
-              <li style={{ marginBottom: '0.5rem' }}>Sydney, Australia</li>
-              <li style={{ marginBottom: '0.5rem' }}>info@exteriorgroup.com.au</li>
+            <h4 class="font-semibold mb-4">Contact</h4>
+            <ul class="space-y-2 text-gray-400 text-sm">
+              <li>Sydney, Australia</li>
+              <li>
+                <a href="mailto:info@exteriorgroup.com.au" class="hover:text-white transition-colors">
+                  info@exteriorgroup.com.au
+                </a>
+              </li>
             </ul>
           </div>
         </div>
         
-        <div style={{
-          borderTop: '1px solid #374151',
-          marginTop: '2rem',
-          paddingTop: '2rem',
-          textAlign: 'center',
-          color: '#9ca3af',
-          fontSize: '0.875rem'
-        }}>
-          © {new Date().getFullYear()} Exterior Group. All rights reserved.
+        <div class="border-t border-gray-700 mt-8 pt-8 text-center text-gray-400 text-sm">
+          © {currentYear} Exterior Group. All rights reserved.
         </div>
       </div>
     </footer>

@@ -1,42 +1,105 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
 
 /* Google Fonts imports */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Montserrat:wght@600;700;800&display=swap');
 
-@layer base {
-  html {
-    @apply scroll-smooth;
-  }
+/* Custom theme extensions */
+@theme {
+  --font-sans: 'Inter', system-ui, sans-serif;
+  --font-heading: 'Montserrat', system-ui, sans-serif;
   
-  body {
-    @apply font-sans text-gray-900 bg-white antialiased;
-  }
+  /* Safety Amber - Primary CTA color */
+  --color-amber-50: #fffbeb;
+  --color-amber-100: #fef3c7;
+  --color-amber-200: #fde68a;
+  --color-amber-300: #fcd34d;
+  --color-amber-400: #fbbf24;
+  --color-amber-500: #f59e0b;
+  --color-amber-600: #d97706;
+  --color-amber-700: #b45309;
+  --color-amber-800: #92400e;
+  --color-amber-900: #78350f;
   
-  h1, h2, h3, h4, h5, h6 {
-    @apply font-heading font-bold;
+  /* Exterior Group brand colors */
+  --color-exterior-dark: #1a1a2e;
+  --color-exterior-primary: #16213e;
+  --color-exterior-accent: #0f3460;
+  --color-exterior-light: #e94560;
+}
+
+/* Base styles */
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-sans);
+  color: #111827;
+  background: white;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading);
+  font-weight: 700;
+}
+
+/* Component classes */
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.75rem 1.5rem;
+  background-color: var(--color-amber-500);
+  color: white;
+  font-weight: 600;
+  border-radius: 0.5rem;
+  transition: background-color 0.2s;
+}
+
+.btn-primary:hover {
+  background-color: var(--color-amber-600);
+}
+
+.btn-primary:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px white, 0 0 0 4px var(--color-amber-500);
+}
+
+.btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.75rem 1.5rem;
+  background-color: var(--color-exterior-primary);
+  color: white;
+  font-weight: 600;
+  border-radius: 0.5rem;
+  transition: background-color 0.2s;
+}
+
+.btn-secondary:hover {
+  background-color: var(--color-exterior-accent);
+}
+
+.container {
+  max-width: 80rem;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+@media (min-width: 640px) {
+  .container {
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
   }
 }
 
-@layer components {
-  .btn-primary {
-    @apply inline-flex items-center justify-center px-6 py-3 
-           bg-amber-500 hover:bg-amber-600 
-           text-white font-semibold rounded-lg
-           transition-colors duration-200
-           focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-offset-2;
-  }
-  
-  .btn-secondary {
-    @apply inline-flex items-center justify-center px-6 py-3 
-           bg-exterior-primary hover:bg-exterior-accent 
-           text-white font-semibold rounded-lg
-           transition-colors duration-200
-           focus:outline-none focus:ring-2 focus:ring-exterior-primary focus:ring-offset-2;
-  }
-  
-  .container-narrow {
-    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+@media (min-width: 1024px) {
+  .container {
+    padding-left: 2rem;
+    padding-right: 2rem;
   }
 }
