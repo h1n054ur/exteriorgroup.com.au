@@ -18,6 +18,8 @@ export interface Env {
   // Secrets (set via wrangler secret put)
   JWT_SECRET?: string;
   TURNSTILE_SECRET_KEY?: string;
+  TURNSTILE_SITE_KEY?: string;
+  ADMIN_PASSWORD_HASH?: string;
 }
 
 // Extend Hono's context to include our bindings

@@ -20,6 +20,9 @@ import { performanceHeaders, cacheHtml, cacheFragments, PRELOAD_HINTS } from './
 import { ProofGallery, GalleryItemsFragment } from './components/proof/proof-gallery';
 import { ProjectDetail } from './components/proof/project-detail';
 import { SlideOverContainer } from './components/ui/slide-over';
+import { LeadForm, LeadFormSuccess, ValidationError, ValidationSuccess } from './components/forms/lead-form';
+import { validateEmail, validatePhone, validateLeadForm, verifyTurnstile, type LeadFormData } from './lib/validation';
+import { leads } from '../db/schema';
 
 // Create typed Hono application
 const app = new Hono<{ Bindings: Env }>();
@@ -135,19 +138,27 @@ app.get('/gallery', async (c) => {
   );
 });
 
-// Enquiry page (placeholder - will be expanded in Epic 4)
+// Enquiry page with lead capture form
 app.get('/enquire', (c) => {
+  const turnstileSiteKey = c.env.TURNSTILE_SITE_KEY;
+  const service = c.req.query('service');
+  const sector = c.req.query('sector');
+  
   return c.html(
     <Layout title="Get a Quote | Exterior Group">
-      <section style={{ padding: '4rem 0' }}>
-        <div class="container" style={{ maxWidth: '600px' }}>
-          <h1 style={{ fontSize: '2.5rem', marginBottom: '1rem' }}>Get a Quote</h1>
-          <p style={{ color: '#6b7280', marginBottom: '2rem' }}>
-            Tell us about your project and we'll get back to you within 24 hours.
-          </p>
-          <div id="lead-form" hx-get="/api/fragments/lead-form" hx-trigger="load" hx-swap="innerHTML">
-            <FormPlaceholder />
+      <section style={{ padding: '4rem 0', background: '#f9fafb' }}>
+        <div class="container" style={{ maxWidth: '600px', margin: '0 auto' }}>
+          <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
+            <h1 style={{ fontSize: '2.5rem', marginBottom: '1rem' }}>Get a Free Quote</h1>
+            <p style={{ color: '#6b7280' }}>
+              Tell us about your project and we'll get back to you within 24 hours.
+            </p>
           </div>
+          <LeadForm 
+            turnstileSiteKey={turnstileSiteKey}
+            prefilledService={service}
+            prefilledSector={sector}
+          />
         </div>
       </section>
     </Layout>
@@ -254,9 +265,142 @@ app.get('/api/fragments/project/:slug', async (c) => {
   return c.html(<ProjectDetail project={project} renderedContent={renderedContent} />);
 });
 
-// Lead form fragment (placeholder - Epic 4)
+// Lead form fragment
 app.get('/api/fragments/lead-form', (c) => {
-  return c.html(<FormPlaceholder />);
+  const turnstileSiteKey = c.env.TURNSTILE_SITE_KEY;
+  return c.html(<LeadForm turnstileSiteKey={turnstileSiteKey} />);
+});
+
+// =============================================================================
+// LEAD CAPTURE API (Epic 4)
+// =============================================================================
+
+// Field validation endpoint (HTMX)
+app.post('/api/leads/validate', async (c) => {
+  const formData = await c.req.formData();
+  
+  const email = formData.get('email') as string | null;
+  const phone = formData.get('phone') as string | null;
+  
+  // Validate email if present
+  if (email !== null) {
+    const result = validateEmail(email);
+    if (!result.valid) {
+      return c.html(<ValidationError message={result.message!} />);
+    }
+    return c.html(<ValidationSuccess />);
+  }
+  
+  // Validate phone if present
+  if (phone !== null) {
+    const result = validatePhone(phone);
+    if (!result.valid) {
+      return c.html(<ValidationError message={result.message!} />);
+    }
+    return c.html(<ValidationSuccess />);
+  }
+  
+  return c.html(<ValidationSuccess />);
+});
+
+// Lead submission endpoint
+app.post('/api/leads/submit', async (c) => {
+  const formData = await c.req.formData();
+  
+  const data: LeadFormData = {
+    name: formData.get('name') as string || '',
+    email: formData.get('email') as string || '',
+    phone: formData.get('phone') as string || undefined,
+    company: formData.get('company') as string || undefined,
+    serviceType: formData.get('serviceType') as string || 'general',
+    sector: formData.get('sector') as string || 'residential',
+    message: formData.get('message') as string || undefined,
+    utmSource: formData.get('utmSource') as string || undefined,
+    utmMedium: formData.get('utmMedium') as string || undefined,
+    utmCampaign: formData.get('utmCampaign') as string || undefined,
+    landingPage: formData.get('landingPage') as string || undefined,
+    turnstileToken: formData.get('cf-turnstile-response') as string || undefined,
+  };
+  
+  // Validate form data
+  const validation = validateLeadForm(data);
+  if (!validation.valid) {
+    const firstError = Object.values(validation.errors)[0];
+    return c.html(
+      <div style={{
+        background: '#fef2f2',
+        border: '1px solid #ef4444',
+        borderRadius: '0.5rem',
+        padding: '1rem',
+        marginBottom: '1rem'
+      }}>
+        <p style={{ color: '#dc2626', fontSize: '0.875rem' }}>
+          {firstError}
+        </p>
+      </div>
+    );
+  }
+  
+  // Verify Turnstile if configured
+  const turnstileSecret = c.env.TURNSTILE_SECRET_KEY;
+  if (turnstileSecret && data.turnstileToken) {
+    const clientIp = c.req.header('CF-Connecting-IP');
+    const turnstileResult = await verifyTurnstile(data.turnstileToken, turnstileSecret, clientIp);
+    
+    if (!turnstileResult.success) {
+      return c.html(
+        <div style={{
+          background: '#fef2f2',
+          border: '1px solid #ef4444',
+          borderRadius: '0.5rem',
+          padding: '1rem',
+          marginBottom: '1rem'
+        }}>
+          <p style={{ color: '#dc2626', fontSize: '0.875rem' }}>
+            Security verification failed. Please try again.
+          </p>
+        </div>
+      );
+    }
+  }
+  
+  // Insert lead into D1
+  const db = createDb(c.env.DB);
+  
+  try {
+    await db.insert(leads).values({
+      name: data.name,
+      email: data.email,
+      phone: data.phone || null,
+      company: data.company || null,
+      serviceType: data.serviceType,
+      sector: data.sector,
+      message: data.message || null,
+      utmSource: data.utmSource || null,
+      utmMedium: data.utmMedium || null,
+      utmCampaign: data.utmCampaign || null,
+      landingPage: data.landingPage || null,
+      status: 'new',
+    });
+    
+    return c.html(<LeadFormSuccess name={data.name.split(' ')[0]} />);
+    
+  } catch (error) {
+    console.error('Lead submission error:', error);
+    return c.html(
+      <div style={{
+        background: '#fef2f2',
+        border: '1px solid #ef4444',
+        borderRadius: '0.5rem',
+        padding: '1rem',
+        marginBottom: '1rem'
+      }}>
+        <p style={{ color: '#dc2626', fontSize: '0.875rem' }}>
+          Something went wrong. Please try again or contact us directly.
+        </p>
+      </div>
+    );
+  }
 });
 
 // =============================================================================
