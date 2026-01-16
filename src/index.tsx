@@ -62,13 +62,102 @@ app.get('/api/health', (c) => {
 // PUBLIC PAGES
 // =============================================================================
 
+const ToolkitSection = () => {
+  const tools = [
+    { title: 'Window Toolkit', description: 'Professional scrubbers and squeegees remove grit and grime.', image: '/assets/toolkit/toolkit-01.jpeg' },
+    { title: 'Gutter Vacuum', description: 'High-quality wet/dry vacuum to remove even the smallest debris.', image: '/assets/toolkit/toolkit-02.jpeg' },
+    { title: 'Soft Wash Tools', description: 'Adjustable pressure to protect your building’s exterior siding.', image: '/assets/toolkit/toolkit-03.jpg' },
+    { title: 'Pro Washers', description: 'Can be tuned to deliver the right amount of pressure for any surface.', image: '/assets/toolkit/toolkit-04.jpeg' },
+  ];
+
+  return (
+    <section class="py-20">
+      <div class="container">
+        <div class="section-header">
+          <h2 class="section-title">Our Toolkit</h2>
+          <p class="section-subtitle">
+            How we tackle your toughest cleaning jobs. Our commitment to innovation 
+            means your home will always be cleaned with the most effective tools.
+          </p>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          {tools.map(tool => (
+            <div class="bg-white rounded-xl overflow-hidden shadow-sm border border-slate-100 group hover:shadow-md transition-all">
+              <div class="aspect-square overflow-hidden">
+                <img src={tool.image} alt={tool.title} class="w-full h-full object-cover group-hover:scale-105 transition-all" />
+              </div>
+              <div class="p-4">
+                <h3 class="font-heading font-bold text-brand">{tool.title}</h3>
+                <p class="text-sm text-slate mt-2">{tool.description}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+};
+
+const ContentSection = () => (
+  <section class="py-20 bg-slate-50">
+    <div class="container">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+        <div class="relative">
+          <img src="/assets/content/main-content.jpeg" alt="Professional cleaning" class="rounded-2xl shadow-xl" />
+          <div class="absolute -bottom-6 -right-6 bg-brand p-6 rounded-2xl shadow-lg hidden md:block">
+            <p class="text-white font-bold text-xl">48hr Re-clean</p>
+            <p class="text-white/80 text-sm">Satisfaction Guarantee</p>
+          </div>
+        </div>
+        <div class="space-y-6">
+          <h2 class="section-title" style="text-align: left;">Better tools for better results</h2>
+          <p class="text-lg text-slate">
+            When you turn to our team of cleaning professionals, you can count on a higher 
+            level of clean. We don’t limit ourselves to tidying up at the ground level. 
+            We use ladders and tools to get at those hard-to-reach spots.
+          </p>
+          <div class="space-y-4">
+            <div class="flex gap-4">
+              <div class="bg-amber/10 p-3 rounded-lg h-fit text-amber">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                </svg>
+              </div>
+              <div>
+                <h4 class="font-bold text-brand">Extreme close-up gutter cameras</h4>
+                <p class="text-slate text-sm">We see clogs and deformities in detail for accurate quotes and quality checks.</p>
+              </div>
+            </div>
+            <div class="flex gap-4">
+              <div class="bg-amber/10 p-3 rounded-lg h-fit text-amber">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                </svg>
+              </div>
+              <div>
+                <h4 class="font-bold text-brand">Professional grade pressure washers</h4>
+                <p class="text-slate text-sm">Adjustable pressure to protect siding while blasting driveways clean.</p>
+              </div>
+            </div>
+          </div>
+          <div class="pt-4">
+            <a href="/enquire" class="btn-primary">Schedule Your Appointment</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+);
+
 // Landing page
 app.get('/', (c) => {
   return c.html(
-    <Layout title="Exterior Group | Commercial & Residential Exterior Services">
+    <Layout title="Exterior Group | Make Your Home's Exterior Sparkle">
       <HeroSection />
       <ServicePillars />
+      <ContentSection />
       <ProofPreview />
+      <ToolkitSection />
       <CTASection />
     </Layout>
   );
@@ -232,39 +321,39 @@ app.get('/painting', (c) => c.html(
 // =============================================================================
 
 const HeroSection = () => (
-  <section class="hero">
+  <section class="hero" style="background-image: linear-gradient(rgba(0,51,102,0.8), rgba(0,51,102,0.8)), url('/assets/corporate/corporate-mainstage.png'); background-size: cover; background-position: center;">
     <div class="container">
       <div class="hero-content">
         <h1 class="hero-title">
-          Transform Your Property with
-          <span class="hero-title-accent">Expert Exterior Services</span>
+          Make your home’s exterior
+          <span class="hero-title-accent">Sparkle</span>
         </h1>
         <p class="hero-subtitle">
-          Professional roofing, painting, and restoration services for commercial and residential 
-          properties across Australia. Quality workmanship guaranteed.
+          Trust the job to your tough-to-tackle cleaning team. Professional window cleaning, 
+          gutter cleaning, and house washing for residential and commercial properties.
         </p>
         <div class="hero-ctas">
           <a href="/enquire" class="btn-primary">
-            Get a Free Quote
+            Enquire Now
           </a>
           <a href="/gallery" class="btn-secondary" style="color: white; border-color: rgba(255,255,255,0.4);">
-            View Our Work →
+            Our Results →
           </a>
         </div>
         
         {/* Trust Stats */}
         <div class="hero-stats">
           <div class="hero-stat">
-            <div class="hero-stat-value">500+</div>
-            <div class="hero-stat-label">Projects Completed</div>
-          </div>
-          <div class="hero-stat">
-            <div class="hero-stat-value">15+</div>
-            <div class="hero-stat-label">Years Experience</div>
-          </div>
-          <div class="hero-stat">
             <div class="hero-stat-value">100%</div>
-            <div class="hero-stat-label">Satisfaction Rate</div>
+            <div class="hero-stat-label">Satisfaction Promise</div>
+          </div>
+          <div class="hero-stat">
+            <div class="hero-stat-value">48hr</div>
+            <div class="hero-stat-label">Re-clean Guarantee</div>
+          </div>
+          <div class="hero-stat">
+            <div class="hero-stat-value">PRO</div>
+            <div class="hero-stat-label">Grade Equipment</div>
           </div>
         </div>
       </div>
@@ -275,25 +364,25 @@ const HeroSection = () => (
 const ServicePillars = () => {
   const pillars = [
     { 
-      title: 'Roofing', 
-      description: 'Expert roof restoration, repairs, and new installations. We handle metal, tile, and Colorbond roofing for all property types.', 
+      title: 'Window Cleaning', 
+      description: 'Squeaky clean. Never streaky. Professional scrubbers and squeegees remove grit and grime in no time.', 
+      icon: '🪟', 
+      href: '/window-cleaning',
+      image: '/assets/services/residential-window-cleaning.png'
+    },
+    { 
+      title: 'Gutter Cleaning', 
+      description: 'Gutters so clean, you\'ll think they\'re new. We use extreme close-up cameras and powerful vacuums.', 
       icon: '🏠', 
-      href: '/roofing',
-      image: '/api/assets/pillars/roofing.jpg'
+      href: '/gutter-cleaning',
+      image: '/assets/services/residential-gutter-cleaning.png'
     },
     { 
-      title: 'Painting', 
-      description: 'Professional exterior and interior painting services. Quality finishes that last, using premium Australian paints.', 
-      icon: '🎨', 
-      href: '/painting',
-      image: '/api/assets/pillars/painting.jpg'
-    },
-    { 
-      title: 'Strata & Commercial', 
-      description: 'Comprehensive solutions for strata buildings and commercial properties. Minimal disruption, maximum results.', 
-      icon: '🏢', 
-      href: '/commercial',
-      image: '/api/assets/pillars/strata.jpg'
+      title: 'Pressure Washing', 
+      description: 'We\'ll give caked on dirt and grime the heave-ho! Professional grade washers tuned for your surface.', 
+      icon: '💦', 
+      href: '/pressure-washing',
+      image: '/assets/services/residential-pressure-washing.png'
     },
   ];
 
@@ -303,8 +392,8 @@ const ServicePillars = () => {
         <div class="section-header">
           <h2 class="section-title">Our Services</h2>
           <p class="section-subtitle">
-            From residential homes to large commercial properties, we deliver quality results every time 
-            with fully licensed and insured teams.
+            From residential homes to large commercial properties, we deliver a higher level of clean. 
+            We use the right tools to get at those hard-to-reach spots.
           </p>
         </div>
         
@@ -314,8 +403,7 @@ const ServicePillars = () => {
               <div class="pillar-image">
                 <div class="pillar-image-overlay"></div>
                 <div class="pillar-icon">{pillar.icon}</div>
-                {/* Placeholder gradient if no image */}
-                <div style="width:100%;height:100%;background:linear-gradient(135deg, var(--color-brand-500) 0%, var(--color-slate-700) 100%);"></div>
+                <img src={pillar.image} alt={pillar.title} class="w-full h-full object-cover" />
               </div>
               <div class="pillar-content">
                 <h3 class="pillar-title">{pillar.title}</h3>
@@ -335,83 +423,46 @@ const ServicePillars = () => {
   );
 };
 
-const ProofPreview = () => {
-  // Sample projects - in real app these would come from DB
-  const featuredProjects = [
-    { 
-      id: 1, 
-      title: 'Colorbond Roof Restoration', 
-      location: 'North Sydney, NSW',
-      category: 'roofing',
-      image: null
-    },
-    { 
-      id: 2, 
-      title: 'Strata Building Repaint', 
-      location: 'Bondi Beach, NSW',
-      category: 'painting',
-      image: null
-    },
-    { 
-      id: 3, 
-      title: 'Commercial Warehouse Roof', 
-      location: 'Parramatta, NSW',
-      category: 'commercial',
-      image: null
-    },
-  ];
+import { BeforeAfterSlider } from './components/proof/before-after-slider';
 
+// ... existing code ...
+
+const ProofPreview = () => {
   return (
-    <section class="py-20">
+    <section class="py-20 bg-slate-50">
       <div class="container">
         <div class="section-header">
-          <h2 class="section-title">See the Proof</h2>
+          <h2 class="section-title">See the Difference</h2>
           <p class="section-subtitle">
-            Browse our portfolio of completed projects and see the transformation for yourself. 
-            Every project showcases our commitment to quality.
+            Results you can rely on. Our work is exterior cleaning, but our mission is 
+            creating extraordinary experiences.
           </p>
         </div>
         
-        <div class="proof-grid">
-          {featuredProjects.map(project => (
-            <article class="proof-card">
-              <div class="proof-card-image">
-                <span class="proof-card-tag">{project.category}</span>
-                {/* Placeholder with gradient */}
-                <div style="width:100%;height:100%;background:linear-gradient(135deg, var(--color-slate-200) 0%, var(--color-slate-300) 100%);display:flex;align-items:center;justify-content:center;">
-                  <svg class="w-12 h-12" style="color: var(--color-slate-400);" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                  </svg>
-                </div>
-                <div class="proof-card-overlay">
-                  <button 
-                    class="proof-card-overlay-btn"
-                    hx-get={`/api/fragments/project/${project.id}`}
-                    hx-target="#slide-over-content"
-                    hx-swap="innerHTML"
-                    onclick="document.getElementById('slide-over').classList.remove('hidden')"
-                  >
-                    View Project Details
-                  </button>
-                </div>
-              </div>
-              <div class="proof-card-content">
-                <h3 class="proof-card-title">{project.title}</h3>
-                <p class="proof-card-location">
-                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                  </svg>
-                  {project.location}
-                </p>
-              </div>
-            </article>
-          ))}
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div class="space-y-4">
+            <h3 class="font-heading text-xl font-bold text-center text-brand">Concrete Cleaning</h3>
+            <BeforeAfterSlider 
+              beforeImage="/assets/before-after/pw-before-1.jpg"
+              afterImage="/assets/before-after/pw-after-1.jpg"
+              beforeAlt="Dirty concrete patio"
+              afterAlt="Clean pressure washed concrete"
+            />
+          </div>
+          <div class="space-y-4">
+            <h3 class="font-heading text-xl font-bold text-center text-brand">House Washing</h3>
+            <BeforeAfterSlider 
+              beforeImage="/assets/before-after/hw-before-1.jpg"
+              afterImage="/assets/before-after/hw-after-1.jpg"
+              beforeAlt="Dirty house exterior"
+              afterAlt="Clean washed house exterior"
+            />
+          </div>
         </div>
         
         <div class="text-center mt-12">
           <a href="/gallery" class="btn-primary">
-            View All Projects
+            See More Results
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
             </svg>

@@ -4,7 +4,7 @@
   "scripts": {
     "dev": "bun run build:css && wrangler dev",
     "build": "bun run build:css",
-    "build:css": "bunx tailwindcss -i ./src/styles.css -o ./dist/styles.css --minify",
+    "build:css": "bunx tailwindcss -i ./src/styles.css -o ./public/styles.css --minify",
     "deploy": "bun run build && wrangler deploy --minify --env=\"\"",
     "deploy:staging": "bun run build && wrangler deploy --minify --env staging",
     "typecheck": "tsc --noEmit",
