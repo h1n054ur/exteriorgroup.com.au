@@ -9,10 +9,17 @@ import { Hono } from 'hono';
 import { logger } from 'hono/logger';
 import { secureHeaders } from 'hono/secure-headers';
 import { compress } from 'hono/compress';
+import { eq } from 'drizzle-orm';
+import { marked } from 'marked';
 import type { Env } from './types/bindings';
 import { createR2Response, createNotFoundResponse } from './lib/r2';
+import { createDb } from './lib/db';
+import { projects } from '../db/schema';
 import { Layout } from './components/ui/layout';
 import { performanceHeaders, cacheHtml, cacheFragments, PRELOAD_HINTS } from './lib/cache';
+import { ProofGallery, GalleryItemsFragment } from './components/proof/proof-gallery';
+import { ProjectDetail } from './components/proof/project-detail';
+import { SlideOverContainer } from './components/ui/slide-over';
 
 // Create typed Hono application
 const app = new Hono<{ Bindings: Env }>();
@@ -107,21 +114,23 @@ app.get('/painting', (c) => {
   );
 });
 
-// Gallery page (placeholder - will be expanded in Epic 3)
-app.get('/gallery', (c) => {
+// Gallery page with D1 data
+app.get('/gallery', async (c) => {
+  const db = createDb(c.env.DB);
+  const projectList = await db.select().from(projects).where(eq(projects.published, true));
+  
   return c.html(
     <Layout title="Our Work | Exterior Group">
       <section style={{ padding: '4rem 0' }}>
         <div class="container">
           <h1 style={{ fontSize: '2.5rem', marginBottom: '1rem' }}>Our Work</h1>
           <p style={{ color: '#6b7280', marginBottom: '2rem' }}>
-            Browse our portfolio of completed projects.
+            Browse our portfolio of completed projects and see the transformation for yourself.
           </p>
-          <div id="gallery-grid" hx-get="/api/fragments/gallery" hx-trigger="load" hx-swap="innerHTML">
-            <GalleryPlaceholder />
-          </div>
+          <ProofGallery projects={projectList} showFilters={true} />
         </div>
       </section>
+      <SlideOverContainer />
     </Layout>
   );
 });
@@ -198,12 +207,54 @@ app.on(['GET', 'HEAD'], '/api/assets/*', async (c) => {
 // FRAGMENT ROUTES (HTMX endpoints)
 // =============================================================================
 
-// Gallery fragment (placeholder)
-app.get('/api/fragments/gallery', (c) => {
-  return c.html(<GalleryPlaceholder />);
+// Gallery fragment with category filtering
+app.get('/api/fragments/gallery', async (c) => {
+  const category = c.req.query('category');
+  const db = createDb(c.env.DB);
+  
+  let query = db.select().from(projects).where(eq(projects.published, true));
+  
+  if (category && category !== '') {
+    // @ts-ignore - Drizzle typing issue with dynamic where
+    query = db.select().from(projects)
+      .where(eq(projects.published, true))
+      .$dynamic();
+  }
+  
+  const projectList = await query;
+  
+  // Filter in memory for now (small dataset)
+  const filtered = category 
+    ? projectList.filter(p => p.category === category)
+    : projectList;
+  
+  return c.html(<GalleryItemsFragment projects={filtered} />);
 });
 
-// Lead form fragment (placeholder)
+// Project detail fragment
+app.get('/api/fragments/project/:slug', async (c) => {
+  const slug = c.req.param('slug');
+  const db = createDb(c.env.DB);
+  
+  const [project] = await db.select().from(projects).where(eq(projects.slug, slug)).limit(1);
+  
+  if (!project) {
+    return c.html(
+      <div style={{ padding: '2rem', textAlign: 'center', color: '#6b7280' }}>
+        Project not found
+      </div>
+    );
+  }
+  
+  // Render markdown description
+  const renderedContent = project.description 
+    ? await marked.parse(project.description) 
+    : undefined;
+  
+  return c.html(<ProjectDetail project={project} renderedContent={renderedContent} />);
+});
+
+// Lead form fragment (placeholder - Epic 4)
 app.get('/api/fragments/lead-form', (c) => {
   return c.html(<FormPlaceholder />);
 });
