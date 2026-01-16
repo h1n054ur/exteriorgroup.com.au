@@ -3,59 +3,63 @@ import { BeforeAfterSlider } from '../proof/before-after-slider';
 
 export const ProofPreview: FC = () => {
   return (
-    <section class="py-24 bg-slate-50">
+    <section id="results" class="py-20">
       <div class="container">
-        <div class="text-center max-w-3xl mx-auto mb-16">
-          <h2 class="text-4xl md:text-5xl font-heading font-bold text-brand-900 mb-6">See the Difference</h2>
-          <p class="text-lg text-slate-600">
-            Results you can rely on. Our work is exterior cleaning, but our mission is 
-            creating extraordinary experiences.
-          </p>
+        <div class="section-head mb-12">
+          <div class="max-w-2xl">
+            <div class="kicker mb-2">Results</div>
+            <h2 class="text-3xl md:text-4xl font-extrabold mb-4">Before & after, the satisfying version</h2>
+            <p class="text-muted leading-relaxed">Drag the handle to compare. Real results from real local jobs.</p>
+          </div>
         </div>
-        
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
-          {/* Gutter Cleaning Comparison */}
-          <div class="space-y-6">
-            <div class="flex items-center justify-between">
-              <h3 class="font-heading text-2xl font-bold text-brand-900">Gutter Cleaning</h3>
-              <span class="px-3 py-1 bg-brand-50 text-brand-500 rounded-full text-sm font-bold">Residential</span>
-            </div>
-            <div class="rounded-2xl overflow-hidden shadow-xl border-4 border-white">
-              <BeforeAfterSlider 
-                beforeImage="/api/assets/before-after/gutter-cleaning-2-before.jpg"
-                afterImage="/api/assets/before-after/gutter-cleaning-2-after.jpg"
-                beforeAlt="Dirty clogged gutters"
-                afterAlt="Clean cleared gutters"
-              />
-            </div>
-            <p class="text-slate-500 italic text-center">Slide to see the transformation</p>
+
+        <div class="grid grid-cols-1 lg:grid-cols-[1.2fr_0.8fr] gap-8 items-stretch">
+          <div class="ba-wrap relative rounded-[26px] overflow-hidden border border-white/15 shadow-2xl bg-white/5 min-h-[400px] reveal">
+            <BeforeAfterSlider 
+              beforeImage="/api/assets/before-after/gutter-cleaning-2-before.jpg"
+              afterImage="/api/assets/before-after/gutter-cleaning-2-after.jpg"
+              beforeAlt="Dirty clogged gutters"
+              afterAlt="Clean cleared gutters"
+            />
           </div>
 
-          {/* House Washing Comparison */}
-          <div class="space-y-6">
-            <div class="flex items-center justify-between">
-              <h3 class="font-heading text-2xl font-bold text-brand-900">House Washing</h3>
-              <span class="px-3 py-1 bg-brand-50 text-brand-500 rounded-full text-sm font-bold">Soft Wash</span>
+          <div class="flex flex-col gap-6">
+            <div class="card p-8 reveal border border-white/15 bg-white/5">
+              <h3 class="text-xl font-extrabold mb-3 tracking-tight">What “done right” looks like</h3>
+              <p class="text-muted text-sm leading-relaxed mb-6">
+                Surfaces cleaned without damage, edges finished, and the site left tidy. That’s the baseline.
+              </p>
+              <div class="grid grid-cols-2 gap-4">
+                <div class="p-4 rounded-2xl border border-white/10 bg-white/5">
+                  <div class="text-2xl font-black tracking-tight mb-1">1–2h</div>
+                  <div class="text-xs font-bold text-muted uppercase tracking-wide">Typical visit</div>
+                </div>
+                <div class="p-4 rounded-2xl border border-white/10 bg-white/5">
+                  <div class="text-2xl font-black tracking-tight mb-1">0%</div>
+                  <div class="text-xs font-bold text-muted uppercase tracking-wide">Guesswork</div>
+                </div>
+                <div class="p-4 rounded-2xl border border-white/10 bg-white/5">
+                  <div class="text-2xl font-black tracking-tight mb-1">Safe</div>
+                  <div class="text-xs font-bold text-muted uppercase tracking-wide">Pressure matched</div>
+                </div>
+                <div class="p-4 rounded-2xl border border-white/10 bg-white/5">
+                  <div class="text-2xl font-black tracking-tight mb-1">Plan</div>
+                  <div class="text-xs font-bold text-muted uppercase tracking-wide">Seasonal care</div>
+                </div>
+              </div>
             </div>
-            <div class="rounded-2xl overflow-hidden shadow-xl border-4 border-white">
-              <BeforeAfterSlider 
-                beforeImage="/api/assets/before-after/Before-Housewash.jpg"
-                afterImage="/api/assets/before-after/After-Housewash.jpg"
-                beforeAlt="Stained house siding"
-                afterAlt="Clean house siding"
-              />
+
+            <div class="card p-8 reveal border border-white/15 bg-white/5 flex items-center justify-between gap-4">
+              <div class="space-y-1">
+                <div class="text-xs font-bold uppercase tracking-widest text-accent2">Quick Booking</div>
+                <div class="text-lg font-black">Want this look?</div>
+                <div class="text-sm text-muted">Tell us what you need, we’ll get back fast.</div>
+              </div>
+              <a class="btn primary py-3 px-6 text-sm" href="/enquire">
+                Enquire
+              </a>
             </div>
-            <p class="text-slate-500 italic text-center">Slide to see the transformation</p>
           </div>
-        </div>
-        
-        <div class="text-center mt-16">
-          <a href="/why-us" class="btn-primary px-10 py-5 text-xl">
-            See More Results
-            <svg class="w-6 h-6 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
-            </svg>
-          </a>
         </div>
       </div>
     </section>

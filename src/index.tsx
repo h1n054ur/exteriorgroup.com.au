@@ -28,9 +28,12 @@ import { ContentSection } from './components/ui/content-section';
 import { ProofPreview } from './components/ui/proof-preview';
 import { CTASection } from './components/ui/cta-section';
 import { ServiceTemplate } from './components/ui/service-template';
-import { LeadForm } from './components/forms/lead-form';
+import { LeadForm, LeadFormStandalone } from './components/forms/lead-form';
 import { SlideOverContainer } from './components/ui/slide-over';
 import { ProofCard } from './components/proof/proof-card';
+import { WhyUs } from './components/ui/why-us';
+import { Reviews } from './components/ui/reviews';
+import { HowItWorks } from './components/ui/how-it-works';
 
 // Create typed Hono application
 const app = new Hono<{ Bindings: Env }>();
@@ -71,10 +74,12 @@ app.get('/', (c) => {
     <Layout title="Exterior Group | Make Your Home's Exterior Sparkle">
       <HeroSection />
       <ServiceSwitcher />
-      <ContentSection />
+      <WhyUs />
       <ProofPreview />
       <ToolkitSection />
-      <CTASection />
+      <Reviews />
+      <HowItWorks />
+      <LeadForm />
     </Layout>
   );
 });
@@ -176,9 +181,11 @@ app.get('/commercial', (c) => c.html(
 // Why Us / Results
 app.get('/why-us', (c) => c.html(
   <Layout title="Why Us | Exterior Group">
+    <WhyUs />
     <ProofPreview />
     <ToolkitSection />
-    <CTASection />
+    <Reviews />
+    <LeadForm />
   </Layout>
 ));
 
@@ -190,17 +197,18 @@ app.get('/enquire', (c) => {
   
   return c.html(
     <Layout title="Get a Quote | Exterior Group" showEmergencyCTA={false}>
-      <section class="py-24 bg-slate-50">
+      <section class="py-24">
         <div class="container max-w-2xl">
           <div class="text-center mb-12">
-            <h1 class="text-4xl md:text-5xl font-heading font-extrabold text-brand-900 mb-6">Get a Free Quote</h1>
-            <p class="text-xl text-slate-600">
+            <div class="kicker mb-3">Free estimate</div>
+            <h1 class="text-4xl md:text-5xl font-extrabold mb-6">Get a free quote</h1>
+            <p class="text-muted text-lg leading-relaxed">
               Tell us about your project and we'll get back to you within 24 hours. 
               No obligation, completely free assessment.
             </p>
           </div>
           
-          <LeadForm 
+          <LeadFormStandalone 
             turnstileSiteKey={turnstileSiteKey}
             prefilledService={service}
             prefilledSector={sector}
@@ -220,53 +228,56 @@ app.get('/gallery', async (c) => {
   
   return c.html(
     <Layout title="Our Work | Exterior Group">
-      <section class="py-24 bg-white">
+      <section class="py-24">
         <div class="container">
-          <div class="text-left mb-16 max-w-3xl">
-            <h1 class="text-4xl md:text-6xl font-heading font-extrabold text-brand-900 mb-6">Our Work</h1>
-            <p class="text-xl text-slate-600 leading-relaxed">
-              Browse our portfolio of completed projects and see the transformation for yourself. 
-              Each project represents our commitment to quality and craftsmanship.
-            </p>
+          <div class="section-head mb-12">
+            <div class="max-w-3xl">
+              <div class="kicker mb-2">Portfolio</div>
+              <h1 class="text-4xl md:text-5xl font-extrabold mb-4">Our work</h1>
+              <p class="text-muted leading-relaxed text-lg">
+                Browse our portfolio of completed projects and see the transformation for yourself. 
+                Each project represents our commitment to quality and craftsmanship.
+              </p>
+            </div>
           </div>
           
           {/* Category Filters */}
-          <div class="flex flex-wrap gap-3 mb-16">
+          <div class="flex flex-wrap gap-3 mb-12">
             <button
-              class="filter-btn active"
+              class="btn py-2.5 px-5 text-sm active"
               hx-get="/api/fragments/gallery"
               hx-target="#gallery-grid"
-              onclick="document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active')); this.classList.add('active');"
+              onclick="document.querySelectorAll('.gallery-filter').forEach(b => b.classList.remove('primary')); this.classList.add('primary');"
             >
               All Projects
             </button>
             <button
-              class="filter-btn"
+              class="btn gallery-filter py-2.5 px-5 text-sm"
               hx-get="/api/fragments/gallery?category=residential"
               hx-target="#gallery-grid"
-              onclick="document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active')); this.classList.add('active');"
+              onclick="document.querySelectorAll('.gallery-filter').forEach(b => b.classList.remove('primary')); this.classList.add('primary');"
             >
               Residential
             </button>
             <button
-              class="filter-btn"
+              class="btn gallery-filter py-2.5 px-5 text-sm"
               hx-get="/api/fragments/gallery?category=commercial"
               hx-target="#gallery-grid"
-              onclick="document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active')); this.classList.add('active');"
+              onclick="document.querySelectorAll('.gallery-filter').forEach(b => b.classList.remove('primary')); this.classList.add('primary');"
             >
               Commercial
             </button>
           </div>
           
           {/* Gallery Grid */}
-          <div id="gallery-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div id="gallery-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {projectList.length > 0 ? (
               projectList.map(project => (
                 <ProofCard project={project} />
               ))
             ) : (
-              <div class="col-span-full text-center py-20 bg-slate-50 rounded-3xl border-2 border-dashed border-slate-200">
-                <p class="text-slate-400 font-heading font-bold">No projects found. Check back soon!</p>
+              <div class="col-span-full text-center py-20 card border border-white/15 bg-white/5 rounded-2xl">
+                <p class="text-muted font-bold">No projects found. Check back soon!</p>
               </div>
             )}
           </div>
@@ -287,17 +298,17 @@ app.notFound((c) => {
     <Layout title="404 - Page Not Found | Exterior Group" showEmergencyCTA={false}>
       <section class="py-32 text-center">
         <div class="container max-w-xl">
-          <div class="text-9xl font-heading font-extrabold text-slate-100 mb-8 select-none">404</div>
-          <h1 class="text-4xl font-heading font-bold text-brand-900 mb-6">Page Not Found</h1>
-          <p class="text-xl text-slate-600 mb-10">
+          <div class="text-9xl font-extrabold text-white/10 mb-8 select-none">404</div>
+          <h1 class="text-4xl font-extrabold mb-6">Page not found</h1>
+          <p class="text-muted text-lg mb-10">
             Sorry, the page you're looking for doesn't exist or has been moved.
           </p>
           <div class="flex flex-wrap gap-4 justify-center">
-            <a href="/" class="btn-primary px-10 py-4 text-lg">
-              Return Home
+            <a href="/" class="btn primary px-8 py-3.5">
+              Return home
             </a>
-            <a href="/enquire" class="btn-secondary px-10 py-4 text-lg">
-              Contact Us
+            <a href="/enquire" class="btn px-8 py-3.5">
+              Contact us
             </a>
           </div>
         </div>
@@ -313,17 +324,17 @@ app.onError((err, c) => {
     <Layout title="Error | Exterior Group" showEmergencyCTA={false}>
       <section class="py-32 text-center">
         <div class="container max-w-xl">
-          <div class="w-24 h-24 mx-auto mb-8 rounded-3xl bg-red-50 flex items-center justify-center text-red-500 shadow-inner">
+          <div class="w-24 h-24 mx-auto mb-8 rounded-2xl bg-red-500/10 border border-red-500/20 flex items-center justify-center text-red-400">
             <svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
             </svg>
           </div>
-          <h1 class="text-4xl font-heading font-bold text-brand-900 mb-6">Something Went Wrong</h1>
-          <p class="text-xl text-slate-600 mb-10">
+          <h1 class="text-4xl font-extrabold mb-6">Something went wrong</h1>
+          <p class="text-muted text-lg mb-10">
             We're sorry, but something unexpected happened. Please try again later.
           </p>
-          <a href="/" class="btn-primary px-10 py-4 text-lg">
-            Return Home
+          <a href="/" class="btn primary px-8 py-3.5">
+            Return home
           </a>
         </div>
       </section>

@@ -1,12 +1,10 @@
 /**
- * Base Layout Component
+ * Base Layout Component - Modern Redesign
  * 
  * Provides the consistent site shell with:
- * - Royal Blue nav-header (#0052CC)
- * - Montserrat headings + Inter UI typography
- * - Responsive navigation with glassmorphism effects
- * - Emergency sticky CTA for mobile
- * - Redesigned footer
+ * - Glassmorphism navigation
+ * - Reveal on scroll logic
+ * - Modern dark footer
  * - HTMX integration
  */
 
@@ -20,8 +18,8 @@ interface LayoutProps extends PropsWithChildren {
 
 export const Layout: FC<LayoutProps> = ({ 
   children, 
-  title = 'Exterior Group | Commercial & Residential Exterior Services',
-  description = 'Professional window cleaning, gutter cleaning, and house washing for residential and commercial properties.',
+  title = 'The Exterior Group | Premium Exterior Cleaning',
+  description = 'Premium exterior cleaning for homes and businesses — windows, gutters, house washing, pressure washing, and more.',
   showEmergencyCTA = true
 }) => {
   return (
@@ -30,183 +28,154 @@ export const Layout: FC<LayoutProps> = ({
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <meta name="description" content={description} />
+        <meta name="theme-color" content="#0b1220" />
         <title>{title}</title>
         
         {/* Favicon */}
         <link rel="icon" type="image/png" href="/favicon.png" />
         
-        {/* Tailwind CSS */}
+        {/* Tailwind CSS (built from src/styles.css) */}
         <link rel="stylesheet" href="/styles.css" />
         
         {/* HTMX v2 */}
         <script src="https://unpkg.com/htmx.org@2.0.4" defer></script>
       </head>
-      <body class="min-h-screen flex flex-col font-sans text-slate-700 antialiased">
+      <body id="top">
         <Navigation />
-        <main id="main-content" class="flex-1">
+        <main>
           {children}
         </main>
         <Footer />
-        {showEmergencyCTA && <EmergencyStickyCTA />}
+        <div class="toast" id="toast" role="status" aria-live="polite"></div>
+        
+        {/* Global Scripts */}
+        <script dangerouslySetInnerHTML={{ __html: `
+          // Reveal on scroll
+          const io = new IntersectionObserver((entries) => {
+            entries.forEach(en => {
+              if (en.isIntersecting) en.target.classList.add('in');
+            });
+          }, { threshold: 0.14 });
+          document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+          // Nav scroll state
+          const nav = document.querySelector('.nav');
+          function onScroll(){
+            if (window.scrollY > 8) nav.classList.add('is-scrolled');
+            else nav.classList.remove('is-scrolled');
+          }
+          window.addEventListener('scroll', onScroll, { passive:true });
+          onScroll();
+
+          // Mobile menu
+          const menuBtn = document.getElementById('menuBtn');
+          const mobilePanel = document.getElementById('mobilePanel');
+          menuBtn?.addEventListener('click', () => {
+            const isOpen = menuBtn.getAttribute('aria-expanded') === 'true';
+            menuBtn.setAttribute('aria-expanded', String(!isOpen));
+            mobilePanel.hidden = isOpen;
+          });
+
+          // Toast utility
+          window.toast = function(msg){
+            const el = document.getElementById('toast');
+            el.textContent = msg;
+            el.classList.add('show');
+            window.clearTimeout(window._toastT);
+            window._t = window.setTimeout(() => el.classList.remove('show'), 2600);
+          }
+        `}} />
       </body>
     </html>
   );
 };
 
-/**
- * Modern Navigation Header
- */
 const Navigation: FC = () => {
-  const navLinks = [
-    { href: '/commercial', label: 'Commercial' },
-    { href: '/residential', label: 'Residential' },
-    { href: '/gallery', label: 'Our Work' },
-    { href: '/why-us', label: 'Why Us' },
-  ];
-
   return (
-    <header class="sticky top-0 z-[100] bg-brand-500/95 backdrop-blur-md border-b border-white/10 shadow-lg">
-      <nav class="container flex items-center justify-between h-20">
-        {/* Logo */}
-        <a href="/" class="flex items-center gap-3 no-underline group">
-          <div class="bg-white p-1.5 rounded-lg shadow-inner group-hover:scale-105 transition-transform">
-            <img src="/images/logos/logo-teg.png" alt="The Exterior Group" class="h-10 w-auto" />
+    <header class="nav">
+      <div class="container nav-inner">
+        <a class="brand" href="/" aria-label="Home">
+          <div class="logo flex items-center justify-center overflow-hidden bg-white p-1">
+            <img src="/images/logos/logo-teg.png" alt="" class="w-full h-auto" />
           </div>
-          <span class="font-heading text-2xl font-black text-white tracking-tight hidden sm:inline">
-            EXTERIOR<span class="text-amber-500">GROUP</span>
-          </span>
+          <span>Exterior Group</span>
         </a>
-        
-        {/* Desktop Navigation */}
-        <div class="hidden md:flex items-center gap-1">
-          {navLinks.map(link => (
-            <a href={link.href} class="px-4 py-2 text-white/80 hover:text-white font-bold text-sm uppercase tracking-wider transition-colors rounded-lg hover:bg-white/10">
-              {link.label}
-            </a>
-          ))}
-          <a href="/enquire" class="btn-primary ml-4 px-6 py-2.5 text-sm uppercase tracking-widest shadow-lg">
-            Get a Quote
+
+        <nav class="nav-links hidden md:flex" aria-label="Primary">
+          <a href="/#services">Services</a>
+          <a href="/#why">Why us</a>
+          <a href="/gallery">Our Work</a>
+          <a href="/#reviews">Reviews</a>
+          <a href="/enquire">Enquire</a>
+        </nav>
+
+        <div class="nav-cta flex items-center gap-2.5">
+          <a class="phone hidden lg:inline-flex px-3 py-2.5 border border-white/10 bg-white/5 rounded-xl font-bold text-sm" href="tel:+61499999909">
+            0499 999 909
           </a>
-        </div>
-        
-        {/* Mobile Menu Button */}
-        <button 
-          type="button"
-          id="mobile-menu-btn"
-          class="md:hidden p-2 text-white bg-white/10 rounded-lg"
-          aria-label="Toggle menu"
-        >
-          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-          </svg>
-        </button>
-      </nav>
-      
-      {/* Mobile Menu */}
-      <div id="mobile-menu" class="hidden md:hidden bg-brand-600 border-t border-white/10 animate-in slide-in-from-top duration-300">
-        <div class="container py-6 space-y-4">
-          {navLinks.map(link => (
-            <a href={link.href} class="block py-3 px-4 text-white hover:bg-white/10 rounded-xl font-bold uppercase tracking-wider">
-              {link.label}
-            </a>
-          ))}
-          <a href="/enquire" class="btn-primary w-full text-center py-4 text-lg mt-4 shadow-xl">
-            Get Your Free Quote
+          <a class="btn primary text-sm py-2.5 px-4" href="/enquire">
+            <svg class="w-4.5 h-4.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M7 8h10M7 12h6m-6 4h10" stroke-linecap="round"/>
+              <path d="M5 3h14a2 2 0 0 1 2 2v14l-4-3H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2Z" stroke-linejoin="round" opacity=".9"/>
+            </svg>
+            Enquire
           </a>
+          <button class="menu-btn flex md:hidden" id="menuBtn" aria-label="Open menu" aria-expanded="false" aria-controls="mobilePanel">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M5 7h14M5 12h14M5 17h14" stroke-linecap="round"/>
+            </svg>
+          </button>
         </div>
       </div>
-      
-      <script dangerouslySetInnerHTML={{ __html: `
-        document.getElementById('mobile-menu-btn').addEventListener('click', function() {
-          var menu = document.getElementById('mobile-menu');
-          menu.classList.toggle('hidden');
-        });
-      `}} />
+
+      <div class="mobile-panel hidden bg-bg2/95 border-t border-line" id="mobilePanel" hidden>
+        <div class="container py-4 space-y-2">
+          <a href="/#services" class="block p-3 font-bold text-muted hover:text-text hover:bg-white/5 rounded-xl">Services</a>
+          <a href="/#why" class="block p-3 font-bold text-muted hover:text-text hover:bg-white/5 rounded-xl">Why us</a>
+          <a href="/gallery" class="block p-3 font-bold text-muted hover:text-text hover:bg-white/5 rounded-xl">Our Work</a>
+          <a href="/#reviews" class="block p-3 font-bold text-muted hover:text-text hover:bg-white/5 rounded-xl">Reviews</a>
+          <a href="/enquire" class="block p-3 font-bold text-muted hover:text-text hover:bg-white/5 rounded-xl text-accent">Enquire Now</a>
+          <div class="pt-4">
+            <a class="btn w-full justify-between" href="tel:+61499999909">
+              <span>Call 0499 999 909</span>
+              <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M6.5 3.5h3l1.2 4-2 1.5c1.1 2.3 3 4.2 5.3 5.3l1.5-2 4 1.2v3c0 1-1 2-2.1 1.9C10.5 18.9 5.1 13.5 4.6 5.6 4.5 4.5 5.5 3.5 6.5 3.5Z" stroke-linejoin="round"/>
+              </svg>
+            </a>
+          </div>
+        </div>
+      </div>
     </header>
   );
 };
-
-const EmergencyStickyCTA: FC = () => (
-  <div class="fixed bottom-0 left-0 right-0 z-[90] p-4 md:hidden pointer-events-none">
-    <a href="/enquire" class="emergency-sticky-btn pointer-events-auto shadow-2xl">
-      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
-      </svg>
-      Get Free Quote
-    </a>
-  </div>
-);
 
 const Footer: FC = () => {
   const currentYear = new Date().getFullYear();
   
   return (
-    <footer class="bg-brand-900 text-white pt-20 pb-10 border-t border-white/5">
+    <footer class="py-10 border-t border-line text-muted">
       <div class="container">
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16">
-          {/* Company Info */}
-          <div class="space-y-6">
-            <div class="flex items-center gap-3">
-              <div class="bg-white p-1.5 rounded-lg">
-                <img src="/images/logos/logo-teg.png" alt="" class="h-8 w-auto" />
+        <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+          <div class="space-y-2">
+            <a class="brand text-text" href="/">
+              <div class="logo flex items-center justify-center overflow-hidden bg-white p-1">
+                <img src="/images/logos/logo-teg.png" alt="" class="w-full h-auto" />
               </div>
-              <span class="text-2xl font-heading font-black">EXTERIOR<span class="text-amber-500">GROUP</span></span>
-            </div>
-            <p class="text-white/50 leading-relaxed">
-              Premium industrial exterior solutions for residential and commercial properties. 
-              Delivering the "Science of Clean" with a 48hr re-clean guarantee.
+              <span>Exterior Group</span>
+            </a>
+            <p class="text-xs text-muted2 max-w-md">
+              Professional exterior services for commercial and residential properties. 
+              Quality workmanship guaranteed since 2010.
             </p>
+            <div class="text-xs">© {currentYear} All rights reserved.</div>
           </div>
           
-          {/* Services */}
-          <div>
-            <h4 class="text-white font-bold uppercase tracking-widest text-sm mb-6">Services</h4>
-            <ul class="space-y-4">
-              <li><a href="/residential" class="text-white/60 hover:text-amber-500 transition-colors">Residential Cleaning</a></li>
-              <li><a href="/commercial" class="text-white/60 hover:text-amber-500 transition-colors">Commercial & Strata</a></li>
-              <li><a href="/residential/window-cleaning" class="text-white/60 hover:text-amber-500 transition-colors">Window Cleaning</a></li>
-              <li><a href="/residential/gutter-cleaning" class="text-white/60 hover:text-amber-500 transition-colors">Gutter Cleaning</a></li>
-            </ul>
+          <div class="flex flex-wrap gap-x-8 gap-y-4 font-bold text-sm uppercase tracking-wider">
+            <a href="/#services" class="hover:text-text transition-colors">Services</a>
+            <a href="/gallery" class="hover:text-text transition-colors">Our Work</a>
+            <a href="/#why" class="hover:text-text transition-colors">Why Choose Us</a>
+            <a href="/enquire" class="hover:text-text transition-colors text-accent">Get a Quote</a>
           </div>
-          
-          {/* Company */}
-          <div>
-            <h4 class="text-white font-bold uppercase tracking-widest text-sm mb-6">Company</h4>
-            <ul class="space-y-4">
-              <li><a href="/gallery" class="text-white/60 hover:text-amber-500 transition-colors">Our Work</a></li>
-              <li><a href="/why-us" class="text-white/60 hover:text-amber-500 transition-colors">Why Choose Us</a></li>
-              <li><a href="/enquire" class="text-white/60 hover:text-amber-500 transition-colors">Contact</a></li>
-              <li><a href="/privacy" class="text-white/60 hover:text-amber-500 transition-colors">Privacy Policy</a></li>
-            </ul>
-          </div>
-          
-          {/* Contact */}
-          <div>
-            <h4 class="text-white font-bold uppercase tracking-widest text-sm mb-6">Get in Touch</h4>
-            <ul class="space-y-4">
-              <li class="flex items-start gap-3 text-white/60">
-                <svg class="w-5 h-5 text-amber-500 flex-shrink-0 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                </svg>
-                <span>Sydney, NSW, Australia</span>
-              </li>
-              <li>
-                <a href="tel:1300123456" class="flex items-center gap-3 text-white hover:text-amber-500 transition-colors group">
-                  <div class="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center group-hover:bg-amber-500 transition-colors">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
-                    </svg>
-                  </div>
-                  <span class="font-bold">1300 123 456</span>
-                </a>
-              </li>
-            </ul>
-          </div>
-        </div>
-        
-        <div class="pt-8 border-t border-white/10 flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-white/40">
-          <p>© {currentYear} Exterior Group. All rights reserved.</p>
-          <p>ABN: 12 345 678 901</p>
         </div>
       </div>
     </footer>
